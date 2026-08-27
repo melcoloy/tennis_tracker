@@ -135,19 +135,22 @@ def telecharger(slugs):
 
 
 def git(*args):
-    """Lance une commande git dans site/ et renvoie sa sortie."""
-    r = subprocess.run(["git", *args], cwd=figer.SORTIE,
-                       capture_output=True, text=True)
+    """Lance une commande git a la racine du projet."""
+    r = subprocess.run(["git", *args], capture_output=True, text=True)
     return r.returncode, (r.stdout + r.stderr).strip()
 
 
 def pousser():
+    """
+    Pousse le projet. C'est GitHub Actions qui met ensuite en ligne.
+
+    Le telechargement, lui, reste local : Tennis Abstract renvoie 403
+    aux adresses des centres de donnees, une Action ne peut donc pas
+    reconstruire les donnees elle-meme.
+    """
     code, _ = git("rev-parse", "--git-dir")
     if code != 0:
-        print("\nsite/ n'est pas un depot git : rien a pousser d'ici.")
-        print("La mise en ligne est faite par GitHub Actions -- soit chaque")
-        print("lundi, soit a la demande depuis l'onglet Actions du depot.")
-        print("Pour verifier en local : cd site && python -m http.server 8080")
+        print("\nCe dossier n'est pas un depot git -- publication ignoree.")
         return
 
     code, sortie = git("status", "--porcelain")
@@ -159,11 +162,12 @@ def pousser():
     print(f"\n{n} fichiers modifies, publication...")
 
     git("add", "-A")
-    code, _ = git("commit", "-m", f"maj {time.strftime('%Y-%m-%d %H:%M')}")
+    git("commit", "-m", f"maj {time.strftime('%Y-%m-%d %H:%M')}")
     code, sortie = git("push")
 
     if code == 0:
-        print("Publie. Le site sera a jour dans une a deux minutes.")
+        print("Pousse. GitHub Actions met le site en ligne dans une minute.")
+        print("Suivi : https://github.com/melcoloy/tennis_tracker/actions")
     else:
         print(f"Echec du push :\n{sortie}")
 

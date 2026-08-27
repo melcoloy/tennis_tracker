@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La montée — tracker de carrière ATP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="chargement" class="chargement">Chargement des données…</div>
+
+<section id="accueil" class="accueil" hidden>
+
+  <header class="acc-entete">
+    <p class="eyebrow">Tracker de carrière ATP</p>
+    <h1>La&nbsp;montée</h1>
+    <p class="acc-intro">
+      Chaque joueur professionnel commence en bas : des tournois ITF à quelques
+      centaines d'euros, devant trente spectateurs. Ce site retrace cette
+      ascension, tournoi par tournoi, jusqu'au circuit principal.
+    </p>
+  </header>
+
+  <div class="acc-lecture">
+    <div>
+      <h3>La frise</h3>
+      <p>Un trait par match, posé sur le palier du tournoi — ITF en bas,
+         Grand Chelem en haut. La masse migre vers le haut au fil des saisons :
+         c'est la carrière, sans une phrase. Les losanges marquent les titres.</p>
+    </div>
+    <div>
+      <h3>Le classement</h3>
+      <p>En échelle logarithmique, parce que passer de 900 à 400 est bien plus
+         facile que de 20 à 11. Le trait s'arrête au dernier tournoi joué ;
+         le pointillé rejoint le classement publié depuis.</p>
+    </div>
+    <div>
+      <h3>Les données</h3>
+      <p>Résultats et classements viennent de Tennis Abstract, la Race de
+         live-tennis.eu. Tout est figé à la publication : aucun suivi,
+         aucun compte, aucune donnée personnelle.</p>
+    </div>
+  </div>
+
+  <div class="acc-recherche">
+    <input id="acc-champ" type="search" list="joueurs-connus"
+           placeholder="Chercher un joueur…" autocomplete="off">
+    <span class="joueur-msg" id="acc-msg"></span>
+  </div>
+
+  <div class="acc-comparer">
+    <h3>Comparer deux carrières</h3>
+    <p>Les deux courbes sont alignées sur l'âge, pas sur la date&nbsp;:
+       on voit qui progressait le plus vite, pas qui jouait en même temps.</p>
+    <div class="cmp-saisie">
+      <input id="acc-cmp-a" type="search" list="joueurs-connus" placeholder="Premier joueur…" autocomplete="off">
+      <input id="acc-cmp-b" type="search" list="joueurs-connus" placeholder="Second joueur…" autocomplete="off">
+      <button id="acc-cmp-go" type="button">Comparer</button>
+    </div>
+    <span class="joueur-msg" id="acc-cmp-msg"></span>
+  </div>
+
+  <div class="grille-joueurs" id="grille-joueurs"></div>
+
+  <footer class="pied">
+    <span id="acc-fraicheur">—</span>
+    <a href="https://github.com/melcoloy/tennis_tracker">code source</a>
+  </footer>
+
+</section>
+
+<section id="comparaison" class="comparaison" hidden>
+
+  <header class="cmp-entete">
+    <p class="eyebrow"><a href="?" class="retour">← tous les joueurs</a></p>
+    <h1>À âge égal</h1>
+    <div class="cmp-vignettes" id="cmp-vignettes"></div>
+  </header>
+
+  <section class="bloc">
+    <div class="titre-bloc">
+      <h2>Le classement, aligné sur l'âge</h2>
+      <p>Chaque courbe démarre au premier tournoi du joueur. L'axe horizontal
+         est son âge, pas l'année&nbsp;: deux carrières séparées de vingt ans
+         deviennent superposables.</p>
+    </div>
+    <div class="svg-hote"><svg id="cmp-courbe" viewBox="0 0 1000 340" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Classement comparé par âge"></svg></div>
+    <p class="infobulle" id="cmp-infobulle">Promenez le curseur sur le graphique.</p>
+    <p class="note" id="cmp-note"></p>
+  </section>
+
+  <section class="bloc">
+    <div class="titre-bloc"><h2>Face à face</h2></div>
+    <div class="tableau-hote">
+      <table class="cmp-table"><tbody id="cmp-table"></tbody></table>
+    </div>
+  </section>
+
+  <section class="bloc">
+    <div class="cmp-saisie">
+      <input id="cmp-champ" type="search" list="joueurs-connus" placeholder="Ajouter un joueur…" autocomplete="off">
+      <span class="joueur-msg" id="cmp-msg"></span>
+    </div>
+  </section>
+
+  <footer class="pied"><span id="cmp-fraicheur">—</span></footer>
+
+</section>
+
+<main id="page" hidden>
+
+  <header class="entete">
+    <div class="entete-nom">
+      <p class="eyebrow"><a href="?" class="retour">← tous les joueurs</a> <span id="eyebrow">—</span></p>
+      <h1 id="nom-joueur">…</h1>
+      <p class="bio" id="bio">—</p>
+      <div class="choix-joueur">
+        <input id="f-joueur" type="search" list="joueurs-connus"
+               placeholder="Voir un autre joueur…" autocomplete="off">
+        <input id="f-comparer" type="search" list="joueurs-connus"
+               placeholder="Comparer avec…" autocomplete="off">
+        <datalist id="joueurs-connus"></datalist>
+        <span class="joueur-msg" id="joueur-msg"></span>
+      </div>
+    </div>
+    <div class="entete-rangs">
+      <div class="rang rang--principal">
+        <span class="rang-valeur" id="rang-actuel">—</span>
+        <span class="rang-label">classement ATP</span>
+      </div>
+      <div class="rang">
+        <span class="rang-valeur" id="rang-peak">—</span>
+        <span class="rang-label">meilleur classement</span>
+        <span class="rang-note" id="rang-peak-date"></span>
+      </div>
+      <div class="rang">
+        <span class="rang-valeur" id="rang-race">—</span>
+        <span class="rang-label">classement Race</span>
+      </div>
+      <div class="rang">
+        <span class="rang-valeur" id="rang-elo">—</span>
+        <span class="rang-label">classement Elo</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- SIGNATURE : chaque match est un trait, pose sur le palier du tournoi.
+       On voit la masse migrer vers le haut annee apres annee. -->
+  <section class="bloc bloc--frise">
+    <div class="titre-bloc">
+      <h2>La montée</h2>
+      <p>Un trait par match, posé sur le palier du tournoi. Plein&nbsp;: victoire. Creux&nbsp;: défaite. Le losange marque un titre.</p>
+    </div>
+    <div class="legende" id="legende-surfaces"></div>
+    <div class="svg-hote"><svg id="frise" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Répartition des matchs par palier de tournoi et par année"></svg></div>
+    <p class="infobulle" id="infobulle-frise">Survolez un trait pour voir le match.</p>
+  </section>
+
+  <section class="bloc">
+    <div class="titre-bloc">
+      <h2>Le classement</h2>
+      <p>Son rang à l'ouverture de chaque tournoi. Échelle logarithmique&nbsp;: passer de 900 à 400 est plus facile que de 20 à 11.</p>
+    </div>
+    <div class="svg-hote"><svg id="courbe" viewBox="0 0 1000 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Évolution du classement ATP"></svg></div>
+    <p class="infobulle" id="infobulle-courbe">Promenez le curseur sur la courbe.</p>
+    <p class="note" id="note-courbe"></p>
+  </section>
+
+  <section class="bloc">
+    <div class="titre-bloc">
+      <h2>Les titres</h2>
+    </div>
+    <ol class="titres" id="titres"></ol>
+  </section>
+
+  <section class="bloc bloc--split">
+    <div>
+      <div class="titre-bloc"><h2>Par surface</h2></div>
+      <div class="barres" id="par-surface"></div>
+    </div>
+    <div>
+      <div class="titre-bloc"><h2>Par palier</h2></div>
+      <div class="barres" id="par-niveau"></div>
+    </div>
+  </section>
+
+  <section class="bloc">
+    <div class="titre-bloc">
+      <h2>Tous les matchs</h2>
+    </div>
+    <div class="filtres">
+      <label>Année
+        <select id="f-annee"><option value="">toutes</option></select>
+      </label>
+      <label>Palier
+        <select id="f-niveau"><option value="">tous</option></select>
+      </label>
+      <label>Résultat
+        <select id="f-resultat">
+          <option value="">tous</option>
+          <option value="W">victoires</option>
+          <option value="L">défaites</option>
+        </select>
+      </label>
+      <label>Adversaire
+        <input id="f-adversaire" type="search" placeholder="nom" autocomplete="off">
+      </label>
+      <span class="compte" id="compte-matchs"></span>
+    </div>
+    <div class="tableau-hote">
+      <table class="matchs">
+        <thead><tr>
+          <th>Date</th><th>Tournoi</th><th>Palier</th><th>Tour</th>
+          <th></th><th>Adversaire</th><th>Score</th>
+        </tr></thead>
+        <tbody id="corps-matchs"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="pied">
+    <span id="fraicheur">—</span>
+    <button id="rafraichir" type="button">Mettre à jour</button>
+  </footer>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

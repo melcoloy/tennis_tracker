@@ -24,6 +24,14 @@ import cache
 SORTIE = Path("site")
 
 
+# Champs qui changent a chaque execution sans que la carriere ait
+# bouge : age du cache, date du releve de la Race. S'ils restaient dans
+# chaque fichier joueur, les 131 fichiers differeraient a chaque
+# publication et le depot grossirait de 25 Mo par semaine. On les sort
+# une fois pour toutes dans index.json.
+VOLATILES = ["cache_age_heures", "race_releve_le", "race_automatique"]
+
+
 def figer_joueur(slug):
     """
     Rassemble en un seul objet ce que l'API sert en quatre endpoints.
@@ -32,8 +40,12 @@ def figer_joueur(slug):
     les fonctions FastAPI recoivent sinon des objets Query au lieu des
     valeurs par defaut, que seul le framework sait resoudre.
     """
+    profil = api.profil(joueur=slug)
+    volatils = {c: profil.pop(c, None) for c in VOLATILES}
+
     return {
-        "profil": api.profil(joueur=slug),
+        "_volatils": volatils,
+        "profil": profil,
         "classement": api.classement(joueur=slug),
         "stats": api.stats(joueur=slug),
         "matchs": api.matchs(joueur=slug, annee=None, niveau=None,
@@ -59,12 +71,16 @@ def construire(slugs):
 
     # 2. un fichier par joueur
     index = []
+    derniers_volatils = {}
     for slug in slugs:
         try:
             data = figer_joueur(slug)
         except Exception as e:
             print(f"  [!] {slug} ignore : {type(e).__name__} -- {e}")
             continue
+
+        volatils = data.pop("_volatils", {})
+        derniers_volatils.update({k: v for k, v in volatils.items() if v})
 
         chemin = dossier_donnees / f"{slug}.json"
         chemin.write_text(json.dumps(data, ensure_ascii=False),
@@ -90,6 +106,7 @@ def construire(slugs):
     (dossier_donnees / "index.json").write_text(
         json.dumps({
             "genere_le": time.strftime("%Y-%m-%d %H:%M"),
+            "race_releve_le": derniers_volatils.get("race_releve_le", ""),
             "joueurs": sorted(index, key=lambda j: j["nom"]),
         }, ensure_ascii=False, indent=2),
         encoding="utf-8")

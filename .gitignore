@@ -10,8 +10,8 @@ page_*.html
 brut_matchs.json
 donnees.json
 
-# le site est reconstruit par GitHub Actions a chaque publication
-site/
+# site/ EST versionne : Tennis Abstract bloque les serveurs de GitHub,
+# le site est donc construit en local puis pousse. L'Action le deploie.
 
 # divers
 .DS_Store
