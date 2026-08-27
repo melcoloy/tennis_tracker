@@ -1,0 +1,75 @@
+name: Publier le tracker
+
+# Le classement ATP sort le lundi matin. On reconstruit dans la foulee.
+on:
+  schedule:
+    - cron: "0 7 * * 1"       # lundi 07:00 UTC
+  workflow_dispatch:          # bouton "Run workflow" dans l'onglet Actions
+
+# Droits minimaux pour publier sur Pages via un artefact.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Deux executions simultanees ecraseraient la meme publication.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+
+  construire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45       # 130 pages avec ralentissements : ~15 min
+
+    steps:
+      - name: Recuperer le projet
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installer les dependances
+        run: pip install -r requirements.txt
+
+      # Sans ce cache, chaque execution retelechargerait 130 pages chez
+      # Tennis Abstract. La cle change a chaque fois pour qu'un nouveau
+      # cache soit ecrit ; restore-keys retrouve le plus recent.
+      - name: Restaurer les pages deja telechargees
+        uses: actions/cache@v4
+        with:
+          path: cache
+          key: tennisabstract-${{ github.run_id }}
+          restore-keys: |
+            tennisabstract-
+
+      - name: Construire le site
+        run: python publier.py --sans-push
+
+      - name: Verifier que le site a bien ete produit
+        run: |
+          test -f site/index.html || { echo "site/index.html manquant"; exit 1; }
+          test -f site/donnees/index.json || { echo "index des donnees manquant"; exit 1; }
+          echo "$(ls site/donnees/*.json | wc -l) fichiers de donnees"
+
+      - name: Preparer l'artefact Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deployer:
+    needs: construire
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+
+    steps:
+      - name: Mettre en ligne
+        id: deploiement
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,18 @@
+# environnement Python
+.venv/
+.venv-1/
+__pycache__/
+*.pyc
+
+# pages telechargees et releves : regenerables, et lourds
+cache/
+page_*.html
+brut_matchs.json
+donnees.json
+
+# le site est reconstruit par GitHub Actions a chaque publication
+site/
+
+# divers
+.DS_Store
+*.tmp
