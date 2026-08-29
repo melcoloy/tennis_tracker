@@ -30,6 +30,7 @@ from pathlib import Path
 import cache
 
 SOURCE = Path("tirage.txt")
+CORRECTIONS = Path("corrections.json")
 SORTIE = Path("site") / "donnees" / "prochain.json"
 
 
@@ -96,10 +97,17 @@ def construire():
 
     connus = {s.lower() for s in cache.joueurs_en_cache()}
 
+    # Les tirages n'ecrivent pas les noms comme Tennis Abstract : sans
+    # cette table, « Aleksandr Shevchenko » ou « Daniel Merida » passent
+    # pour des inconnus alors que leur fiche existe deja.
+    table = (json.loads(CORRECTIONS.read_text(encoding="utf-8"))
+             if CORRECTIONS.exists() else {})
+
     entrees = []
     for ligne in joueurs:
         nom, marque = separer(ligne)
         slug = cache.slugifier(nom) if nom else ""
+        slug = table.get(slug, slug) or ""
         entrees.append({
             "nom": nom,
             "marque": marque,

@@ -1,5 +1,5 @@
 {
-  "genere_le": "2026-08-29 23:27",
+  "genere_le": "2026-08-29 23:31",
   "race_releve_le": "29/08/2026",
   "joueurs": [
     {
@@ -311,6 +311,13 @@
       "nb_matchs": 1006
     },
     {
+      "slug": "CarlosTaberner",
+      "nom": "Carlos Taberner",
+      "pays": "ESP",
+      "rang": "400",
+      "nb_matchs": 720
+    },
+    {
       "slug": "CasperRuud",
       "nom": "Casper Ruud",
       "pays": "NOR",
@@ -414,6 +421,13 @@
       "pays": "RUS",
       "rang": "8",
       "nb_matchs": 855
+    },
+    {
+      "slug": "DarwinBlanch",
+      "nom": "Darwin Blanch",
+      "pays": "USA",
+      "rang": "241",
+      "nb_matchs": 155
     },
     {
       "slug": "DavidFerrer",
@@ -535,6 +549,13 @@
       "nb_matchs": 655
     },
     {
+      "slug": "FilipMisolic",
+      "nom": "Filip Misolic",
+      "pays": "AUT",
+      "rang": "530",
+      "nb_matchs": 317
+    },
+    {
       "slug": "FlavioCobolli",
       "nom": "Flavio Cobolli",
       "pays": "ITA",
@@ -556,6 +577,13 @@
       "nb_matchs": 351
     },
     {
+      "slug": "FrancescoPassaro",
+      "nom": "Francesco Passaro",
+      "pays": "ITA",
+      "rang": "207",
+      "nb_matchs": 368
+    },
+    {
       "slug": "FranciscoCerundolo",
       "nom": "Francisco Cerundolo",
       "pays": "ARG",
@@ -575,6 +603,13 @@
       "pays": "CAN",
       "rang": "114",
       "nb_matchs": 288
+    },
+    {
+      "slug": "GaelMonfils",
+      "nom": "Gael Monfils",
+      "pays": "FRA",
+      "rang": "307",
+      "nb_matchs": 1065
     },
     {
       "slug": "GauthierOnclin",
@@ -696,11 +731,25 @@
       "nb_matchs": 1321
     },
     {
+      "slug": "JJWolf",
+      "nom": "J J Wolf",
+      "pays": "USA",
+      "rang": "248",
+      "nb_matchs": 347
+    },
+    {
       "slug": "JackDraper",
       "nom": "Jack Draper",
       "pays": "GBR",
       "rang": "141",
       "nb_matchs": 371
+    },
+    {
+      "slug": "JackKennedy",
+      "nom": "Jack Kennedy",
+      "pays": "USA",
+      "rang": "386",
+      "nb_matchs": 64
     },
     {
       "slug": "JackPinningtonJones",
@@ -869,6 +918,13 @@
       "pays": "ARG",
       "rang": "\"\"",
       "nb_matchs": 759
+    },
+    {
+      "slug": "JunchengShang",
+      "nom": "Juncheng Shang",
+      "pays": "CHN",
+      "rang": "227",
+      "nb_matchs": 235
     },
     {
       "slug": "JurijRodionov",
@@ -1326,6 +1382,13 @@
       "nb_matchs": 491
     },
     {
+      "slug": "SebastianGorzny",
+      "nom": "Sebastian Gorzny",
+      "pays": "USA",
+      "rang": "760",
+      "nb_matchs": 45
+    },
+    {
       "slug": "SebastianKorda",
       "nom": "Sebastian Korda",
       "pays": "USA",
@@ -1422,6 +1485,13 @@
       "pays": "FRA",
       "rang": "90",
       "nb_matchs": 423
+    },
+    {
+      "slug": "ThanasiKokkinakis",
+      "nom": "Thanasi Kokkinakis",
+      "pays": "AUS",
+      "rang": "412",
+      "nb_matchs": 485
     },
     {
       "slug": "ThiagoAgustinTirante",
