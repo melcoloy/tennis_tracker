@@ -1254,6 +1254,19 @@ function remplirGrille() {
       <span class="cj-matchs">${j.nb_matchs ? j.nb_matchs + " matchs" : ""}</span>
     </a>`).join("");
 
+  // Bandeau du prochain tournoi. Il ne s'affiche que si un tirage a
+  // ete publie : sans prochain.json, le bloc reste masque.
+  fetch("donnees/prochain.json")
+    .then((r) => (r.ok ? r.json() : Promise.reject()))
+    .then((p) => {
+      $("ap-titre").textContent = p.nom;
+      $("ap-detail").textContent =
+        [p.date_fr, p.niveau, p.surface, `${p.joueurs.length} joueurs`]
+          .filter(Boolean).join(" · ");
+      $("acc-pronostic").hidden = false;
+    })
+    .catch(() => { $("acc-pronostic").hidden = true; });
+
   chargerTournois()
     .then((liste) => {
       $("acc-grille-tournois").innerHTML =

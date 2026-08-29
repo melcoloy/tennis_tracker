@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=b0710f43-eaa80ae3">
+<link rel="stylesheet" href="style.css?v=fe1e7ab0-86ecc9d3">
 </head>
 <body>
 
@@ -51,6 +51,15 @@
     </div>
   </div>
 
+  <a class="acc-pronostic" id="acc-pronostic" href="?prochain" hidden>
+    <div class="ap-texte">
+      <span class="ap-etiquette">Pronostics</span>
+      <span class="ap-titre" id="ap-titre">—</span>
+      <span class="ap-detail" id="ap-detail">—</span>
+    </div>
+    <span class="ap-bouton">Remplir mon tableau →</span>
+  </a>
+
   <div class="acc-recherche">
     <input id="acc-champ" type="search" list="joueurs-connus"
            placeholder="Chercher un joueur…" autocomplete="off">
@@ -72,7 +81,6 @@
   <div class="acc-tournois">
     <div class="acc-tournois-tete">
       <h3>Derniers tournois</h3>
-      <a href="?prochain" class="lien-plus">pronostics →</a>
       <a href="?tournois" class="lien-plus">voir les 60 →</a>
     </div>
     <div class="grille-tournois" id="acc-grille-tournois"></div>
@@ -281,6 +289,6 @@
 
 </main>
 
-<script src="script.js?v=b0710f43-eaa80ae3"></script>
+<script src="script.js?v=fe1e7ab0-86ecc9d3"></script>
 </body>
 </html>
