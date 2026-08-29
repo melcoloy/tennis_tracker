@@ -805,84 +805,56 @@ function rendreTableau(t) {
   const tours = arbre.map((niveau) => (niveau.find(Boolean) || {}).tour || "");
 
   const colonnes = arbre.map((niveau, i) => `
-      <div class="tb-colonne" data-tour="${i}">
+      <div class="tb-colonne" data-rang="${i}">
         <h4>${NOM_TOUR_FR[tours[i]] || tours[i]}</h4>
         <div class="tb-cases">${niveau.map(caseTableau).join("")}</div>
       </div>`).join("");
 
+  // Les onglets choisissent le tour de depart : afficher les 64es
+  // impose 64 cases de haut, alors que partir des 8es en laisse 8.
+  // C'est la seule facon de garder un tableau lisible sans le reduire.
   const onglets = tours.map((tour, i) =>
-    `<button type="button" class="tb-onglet" data-vers="${i}">${
-      NOM_TOUR_FR[tour] || tour}</button>`).join("");
+    `<button type="button" class="tb-onglet" data-depuis="${i}">à partir des ${
+      (NOM_TOUR_FR[tour] || tour).toLowerCase()}</button>`).join("");
 
-  // On ne compte que les vrais trous : une exemption n'en est pas un.
   const trous = arbre.flat().filter((m) => m && !m.perdant && !m.exempte).length;
 
   return `
-    <div class="tb-commandes">
-      <div class="tb-onglets">${onglets}</div>
-      <div class="tb-zoom">
-        <button type="button" id="zoom-moins" title="Dézoomer">−</button>
-        <span id="zoom-valeur">100 %</span>
-        <button type="button" id="zoom-plus" title="Zoomer">+</button>
-      </div>
-    </div>
+    <div class="tb-onglets">${onglets}</div>
     <div class="tb-defilement" id="tb-defilement">
-      <div class="tb-cadre" id="tb-cadre"><div class="tb-arbre" id="tb-arbre">${colonnes}</div></div>
+      <div class="tb-arbre" id="tb-arbre">${colonnes}</div>
     </div>
     ${trous ? `<p class="note">${trous} match${trous > 1 ? "s" : ""} ` +
       `non retrouvé${trous > 1 ? "s" : ""} : opposai${trous > 1 ? "ent" : "t"} ` +
       `deux joueurs absents de la base.</p>` : ""}`;
 }
 
-/** Zoom et navigation par tour, une fois le tableau dans la page. */
+/** Branche les onglets une fois le tableau dans la page. */
 function activerTableau() {
-  const cadre = document.getElementById("tb-cadre");
   const arbre = document.getElementById("tb-arbre");
   const zone = document.getElementById("tb-defilement");
-  if (!cadre || !arbre) return;
+  if (!arbre) return;
 
-  // Dimensions naturelles, mesurees une fois avant toute mise a l'echelle.
-  const largeur = arbre.offsetWidth;
-  const hauteur = arbre.offsetHeight;
+  const colonnes = [...arbre.querySelectorAll(".tb-colonne")];
+  const onglets = [...document.querySelectorAll(".tb-onglet")];
+  if (!colonnes.length) return;
 
-  let z = 1;
-
-  function appliquer() {
-    arbre.style.transform = `scale(${z})`;
-    // Le cadre porte la taille mise a l'echelle : sans lui, la
-    // transformation ne changerait pas les barres de defilement.
-    cadre.style.width = `${largeur * z}px`;
-    cadre.style.height = `${hauteur * z}px`;
-    document.getElementById("zoom-valeur").textContent = `${Math.round(z * 100)} %`;
+  function montrerDepuis(depuis) {
+    colonnes.forEach((c) => {
+      c.hidden = Number(c.dataset.rang) < depuis;
+    });
+    onglets.forEach((b) => b.classList.toggle("actif",
+      Number(b.dataset.depuis) === depuis));
+    if (zone) zone.scrollLeft = 0;
   }
 
-  document.getElementById("zoom-moins").addEventListener("click", () => {
-    z = Math.max(0.4, z - 0.15);
-    appliquer();
-  });
-  document.getElementById("zoom-plus").addEventListener("click", () => {
-    z = Math.min(1.6, z + 0.15);
-    appliquer();
-  });
+  onglets.forEach((b) =>
+    b.addEventListener("click", () => montrerDepuis(Number(b.dataset.depuis))));
 
-  document.querySelectorAll(".tb-onglet").forEach((b) => {
-    b.addEventListener("click", () => {
-      const col = arbre.querySelector(`[data-tour="${b.dataset.vers}"]`);
-      if (!col) return;
-
-      document.querySelectorAll(".tb-onglet").forEach((x) =>
-        x.classList.toggle("actif", x === b));
-
-      // On centre la colonne a la main : scrollIntoView ferait aussi
-      // defiler la page entiere, ce qui est desagreable ici.
-      const cible = (col.offsetLeft + col.offsetWidth / 2) * z - zone.clientWidth / 2;
-      zone.scrollTo({ left: Math.max(0, cible), behavior: "smooth" });
-    });
-  });
-
-  // On ouvre sur la finale, la partie la plus lisible du tableau.
-  const dernier = document.querySelectorAll(".tb-onglet");
-  if (dernier.length) dernier[dernier.length - 1].click();
+  // On ouvre sur les huitiemes quand ils existent : huit cases tiennent
+  // a l'ecran, et les tours suivants sont ceux qui interessent le plus.
+  const depart = Math.max(0, colonnes.length - 4);
+  montrerDepuis(depart);
 }
 
 async function afficherTournois() {

@@ -827,18 +827,9 @@ a.tb-nom:hover { text-decoration: underline; }
   .tb-arbre { gap: 14px; }
 }
 
-/* -------------------------------------- navigation et zoom du tableau */
+/* ------------------------------------------ navigation dans le tableau */
 
-.tb-commandes {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin: 22px 0 6px;
-}
-
-.tb-onglets { display: flex; gap: 6px; flex-wrap: wrap; }
+.tb-onglets { display: flex; gap: 6px; flex-wrap: wrap; margin: 22px 0 4px; }
 
 .tb-onglets button {
   font-family: var(--mono);
@@ -850,25 +841,4 @@ a.tb-nom:hover { text-decoration: underline; }
 
 .tb-onglets button.actif { border-color: var(--dur); color: var(--texte); }
 
-.tb-zoom { display: flex; align-items: center; gap: 8px; }
-
-.tb-zoom button {
-  width: 30px;
-  padding: 6px 0;
-  font-size: 15px;
-  line-height: 1;
-}
-
-#zoom-valeur {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--sourdine);
-  min-width: 46px;
-  text-align: center;
-}
-
-/* Le cadre porte la taille mise a l'echelle : la transformation du
-   contenu ne modifie pas, a elle seule, les barres de defilement. */
-.tb-cadre { transform-origin: 0 0; }
-.tb-arbre { transform-origin: 0 0; transition: transform .18s ease; }
 .tb-defilement { scroll-behavior: smooth; }
