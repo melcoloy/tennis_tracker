@@ -829,16 +829,90 @@ a.tb-nom:hover { text-decoration: underline; }
 
 /* ------------------------------------------ navigation dans le tableau */
 
-.tb-onglets { display: flex; gap: 6px; flex-wrap: wrap; margin: 22px 0 4px; }
-
-.tb-onglets button {
+.tb-etendre {
+  margin: 22px 0 4px;
   font-family: var(--mono);
   font-size: 9.5px;
   letter-spacing: .09em;
   text-transform: uppercase;
-  padding: 7px 12px;
+  padding: 8px 14px;
 }
 
-.tb-onglets button.actif { border-color: var(--dur); color: var(--texte); }
+.tb-etendre.actif { border-color: var(--dur); color: var(--texte); }
 
-.tb-defilement { scroll-behavior: smooth; }
+/* --------------------------------------------------------- pronostics */
+
+.prochain { max-width: 1140px; margin: 0 auto; padding: 0 28px 80px; }
+
+.prc-entete { padding: 66px 0 30px; border-bottom: 1px solid var(--trait); }
+
+.prc-entete h1 {
+  margin: 6px 0 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(38px, 6.5vw, 68px);
+  line-height: .95;
+  letter-spacing: -.03em;
+}
+
+.prc-commandes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.prc-actions { display: flex; align-items: center; gap: 10px; }
+
+.prc-actions button {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  padding: 8px 13px;
+}
+
+.prc-etat { font-family: var(--mono); font-size: 10.5px; color: var(--sourdine); }
+
+.pr-match {
+  border: 1px solid var(--trait);
+  border-left: 2px solid var(--trait);
+  border-radius: 4px;
+  background: var(--panneau);
+  overflow: hidden;
+}
+
+/* Un match dont le vainqueur est designe porte le bleu du projet :
+   on repere d'un coup d'oeil ce qui reste a remplir. */
+.pr-match:has(.pr-choisi) { border-left-color: var(--dur); }
+
+.pr-ligne {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 7px 10px;
+  font-family: var(--corps);
+  font-size: 12.5px;
+  color: var(--sourdine);
+  cursor: pointer;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: background .12s, color .12s;
+}
+
+.pr-ligne + .pr-ligne { border-top: 1px solid var(--trait); }
+button.pr-ligne:hover { background: rgba(76, 155, 214, .12); color: var(--texte); }
+.pr-ligne.pr-choisi { color: var(--texte); font-weight: 500; background: rgba(76, 155, 214, .16); }
+.pr-attente { cursor: default; opacity: .4; font-style: italic; }
+.pr-nom { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+@media (max-width: 780px) {
+  .prochain { padding: 0 18px 60px; }
+  .prc-entete { padding: 44px 0 24px; }
+  .prc-commandes { gap: 12px; }
+}

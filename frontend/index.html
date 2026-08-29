@@ -72,6 +72,7 @@
   <div class="acc-tournois">
     <div class="acc-tournois-tete">
       <h3>Derniers tournois</h3>
+      <a href="?prochain" class="lien-plus">pronostics →</a>
       <a href="?tournois" class="lien-plus">voir les 60 →</a>
     </div>
     <div class="grille-tournois" id="acc-grille-tournois"></div>
@@ -83,6 +84,29 @@
     <span id="acc-fraicheur">—</span>
     <a href="https://github.com/melcoloy/tennis_tracker">code source</a>
   </footer>
+
+</section>
+
+<section id="prochain" class="prochain" hidden>
+
+  <header class="prc-entete">
+    <p class="eyebrow"><a href="?" class="retour">← tous les joueurs</a></p>
+    <h1 id="prc-titre">Prochain tournoi</h1>
+    <p class="trn-intro" id="prc-intro"></p>
+  </header>
+
+  <div class="prc-commandes">
+    <div class="tb-onglets" id="prc-onglets"></div>
+    <div class="prc-actions">
+      <span class="prc-etat" id="prc-etat"></span>
+      <button type="button" id="prc-image">Exporter en image</button>
+      <button type="button" id="prc-vider">Tout effacer</button>
+    </div>
+  </div>
+
+  <div class="tb-defilement"><div class="tb-arbre" id="prc-arbre"></div></div>
+
+  <footer class="pied"><span id="prc-pied"></span></footer>
 
 </section>
 

@@ -1,0 +1,138 @@
+# Nom: US Open
+# Date: 20260831
+# Surface: Hard
+# Niveau: Grand Chelem
+
+# Un joueur par ligne, dans l'ordre du tableau (de haut en bas).
+# Le premier affronte le deuxieme, le troisieme affronte le quatrieme,
+# et ainsi de suite. Une ligne vide vaut une place a determiner.
+# Les lignes commencant par # sont ignorees.
+
+Alexander Zverev (1)
+Lorenzo Sonego
+Quentin Halys
+Facundo Díaz Acosta
+Grigor Dimitrov (Q)
+Alexei Popyrin
+Yannick Hanfmann
+Alejandro Tabilo (25)
+Luciano Darderi (21)
+Harry Wendelken (Q)
+Dalibor Svrčina (Q)
+Valentin Royer
+Dane Sweeny (WC)
+Corentin Moutet
+Arthur Fery
+Lorenzo Musetti (13)
+Rafael Jódar (12)
+Thanasi Kokkinakis
+Fábián Marozsán
+Michael Zheng (WC)
+Zachary Svajda
+Daniel Altmaier
+Juan Manuel Cerúndolo
+Casper Ruud (19)
+Zizou Bergs (31)
+Carlos Taberner 
+Jesper de Jong
+Francesco Passaro (Q)
+Jan Choinski
+Botic van de Zandschulp
+Andrea Guerrieri (Q)
+Alex de Minaur (6)
+Félix Auger-Aliassime (3)
+Rinky Hijikata
+Román Andrés Burruchaga
+Karen Khachanov
+Alex Molčan
+Benjamin Bonzi
+Marcos Giron
+Ignacio Buse (32)
+Jakub Menšík (17)
+Shintaro Mochizuki (LL) 
+Jurij Rodionov (Q)
+Giovanni Mpetshi Perricard
+Adolfo Daniel Vallejo
+Gaël Monfils (WC)
+Nuno Borges
+Learner Tien (14)
+Taylor Fritz (9)
+Darwin Blanch (WC)
+Mattia Bellucci
+Zsombor Piros (Q)
+Camilo Ugo Carabelli
+Jan Lennard Struff
+Filip Misolic
+Francisco Cerúndolo (24)
+Alexander Blockx (28)
+Tomás Barrios Vera (Q) 
+Juncheng Shang
+Marco Trungelliti
+Nishesh Basavareddy (Q)
+Tristan Schoolkate (Q) 
+Francisco Comesaña
+Flavio Cobolli (5)
+Daniil Medvedev (7)
+Hugo Gaston (Q)
+Sebastian Gorzny (WC)
+Raphaël Collignon
+Jaume Munar
+Térence Atmane
+Sho Shimabukuro
+Arthur Rinderknech (26)
+Valentin Vacherot (22)
+Aleksandar Kovačević 
+Kamil Majchrzak
+Hamad Medjedović
+Aleksandar Vukic
+Rei Sakamoto (Q)
+Martin Damm
+Frances Tiafoe (11)
+Brandon Nakashima (16)
+Sebastián Báez
+Alex Michelsen
+Federico Cina (Q)
+Daniel Mérida
+Márton Fucsovics
+Marin Čilić
+Andrey Rublev (23)
+Tomás Martín Etcheverry (27)
+Vít Kopřiva
+Martin Landaluce
+Jacob Fearnley (LL)
+Matteo Berrettini
+Stan Wawrinka (WC) 
+Mariano Navone
+Novak Djoković (4)
+Ben Shelton (8)
+Tallon Griekspoor
+Damir Džumhur
+Hubert Hurkacz
+Miomir Kecmanović
+Denis Shapovalov 
+Luca Van Assche
+Cameron Norrie (29)
+Jiří Lehečka (18)
+Pablo Carreño Busta
+Toby Samuel (Q)
+Tomáš Macháč
+Lloyd Harris (Q)
+Jack Kennedy (WC)
+Stefanos Tsitsipas
+Arthur Fils (10)
+Alexander Bublik (15)
+J.J. Wolf (WC) 
+Thiago Agustín Tirante
+Adrian Mannarino
+Dino Prižmić
+Aleksandr Shevchenko 
+Coleman Wong (Q)
+Tommy Paul (20)
+Matteo Arnaldi (30)
+James Duckworth
+Yibing Wu
+Adam Walton
+Jaime Faria
+Jenson Brooksby
+Roman Safiullin
+Carlos Alcaraz (2)

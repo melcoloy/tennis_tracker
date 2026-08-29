@@ -662,6 +662,265 @@ $("rafraichir").addEventListener("click", async (ev) => {
 });
 
 
+
+/* --------------------------------------------------- pronostics */
+
+// Le tirage vient de prochain.json, prepare par prochain.py : nos
+// donnees ne contiennent que des matchs joues, jamais un tableau a
+// venir. Les choix restent dans le navigateur de l'utilisateur.
+
+let PROCHAIN = null;
+let PICKS = [];
+
+function nomTourParMatchs(n) {
+  return { 64: "64es de finale", 32: "32es de finale", 16: "16es de finale",
+           8: "8es de finale", 4: "Quarts de finale", 2: "Demi-finales",
+           1: "Finale" }[n] || `${n} matchs`;
+}
+
+function cleStockage() {
+  return `pronostic:${PROCHAIN.id}`;
+}
+
+function chargerPicks(nbTours) {
+  try {
+    const brut = localStorage.getItem(cleStockage());
+    if (brut) {
+      const p = JSON.parse(brut);
+      if (Array.isArray(p) && p.length === nbTours) return p;
+    }
+  } catch { /* stockage indisponible : on repart a vide */ }
+  return Array.from({ length: nbTours },
+    (_, r) => new Array(PROCHAIN.joueurs.length / 2 ** (r + 1)).fill(null));
+}
+
+function enregistrerPicks() {
+  try {
+    localStorage.setItem(cleStockage(), JSON.stringify(PICKS));
+  } catch { /* mode prive, quota... : le tableau reste utilisable */ }
+}
+
+/** Les deux participants du match i au tour r. */
+function participants(r, i) {
+  if (r === 0) {
+    return [PROCHAIN.joueurs[2 * i].nom, PROCHAIN.joueurs[2 * i + 1].nom];
+  }
+  return [PICKS[r - 1][2 * i], PICKS[r - 1][2 * i + 1]];
+}
+
+/**
+ * Enregistre un choix et efface ceux qui en decoulaient.
+ *
+ * Changer d'avis au premier tour doit invalider tout ce qui suit :
+ * sans cela, un joueur elimine resterait qualifie plus loin.
+ */
+function choisir(r, i, nom) {
+  if (PICKS[r][i] === nom) nom = null;      // deuxieme clic : on annule
+  PICKS[r][i] = nom;
+
+  let tour = r + 1, index = Math.floor(i / 2);
+  while (tour < PICKS.length) {
+    PICKS[tour][index] = null;
+    tour += 1;
+    index = Math.floor(index / 2);
+  }
+
+  enregistrerPicks();
+  dessinerPronostic();
+}
+
+function dessinerPronostic() {
+  const arbre = $("prc-arbre");
+  const n = PROCHAIN.joueurs.length;
+
+  arbre.innerHTML = PICKS.map((tour, r) => {
+    const cases = tour.map((choix, i) => {
+      const [a, b] = participants(r, i);
+
+      const ligne = (nom, place) => {
+        if (!nom) {
+          return `<div class="pr-ligne pr-attente">
+                    <span class="pr-nom">${place}</span></div>`;
+        }
+        const actif = choix === nom;
+        return `<button type="button" class="pr-ligne${actif ? " pr-choisi" : ""}"
+                        data-tour="${r}" data-match="${i}" data-nom="${nom}">
+                  <span class="pr-nom">${nom}</span>
+                </button>`;
+      };
+
+      return `<div class="pr-match">
+                ${ligne(a, "à déterminer")}
+                ${ligne(b, "à déterminer")}
+              </div>`;
+    }).join("");
+
+    return `<div class="tb-colonne" data-rang="${r}">
+              <h4>${nomTourParMatchs(tour.length)}</h4>
+              <div class="tb-cases">${cases}</div>
+            </div>`;
+  }).join("");
+
+  arbre.querySelectorAll("button.pr-ligne").forEach((b) => {
+    b.addEventListener("click", () =>
+      choisir(Number(b.dataset.tour), Number(b.dataset.match), b.dataset.nom));
+  });
+
+  const faits = PICKS.flat().filter(Boolean).length;
+  const total = PICKS.flat().length;
+  $("prc-etat").textContent = `${faits} / ${total} pronostics`;
+
+  const gagnant = PICKS[PICKS.length - 1][0];
+  $("prc-pied").textContent = gagnant
+    ? `Votre vainqueur : ${gagnant}`
+    : `Cliquez sur un joueur pour le qualifier au tour suivant.`;
+}
+
+/**
+ * Redessine le tableau en SVG, puis l'exporte en PNG.
+ *
+ * On ne photographie pas le HTML : on le redessine. Cela evite une
+ * bibliotheque externe, et le rendu ne depend ni des polices chargees
+ * ni de la position du defilement.
+ */
+function exporterImage() {
+  const R = PICKS.length;
+  const nbMax = PICKS[0].length;
+
+  const colW = 200, gap = 18, boxH = 40, marge = 24, entete = 46;
+  const H = nbMax * (boxH + 14);
+  const W = R * (colW + gap) - gap;
+
+  const F = "-apple-system, Segoe UI, Roboto, sans-serif";
+  const esc = (t) => String(t || "").replace(/[<>&]/g,
+    (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
+
+  let corps = "";
+
+  PICKS.forEach((tour, r) => {
+    const x = marge + r * (colW + gap);
+    corps += `<text x="${x}" y="${marge + 14}" fill="#7E879B" font-family="${F}"` +
+             ` font-size="11" letter-spacing="1.4">` +
+             `${esc(nomTourParMatchs(tour.length)).toUpperCase()}</text>`;
+
+    tour.forEach((choix, i) => {
+      const [a, b] = participants(r, i);
+      const centre = entete + marge + H * (i + 0.5) / tour.length;
+      const y = centre - boxH / 2;
+
+      corps += `<rect x="${x}" y="${y}" width="${colW}" height="${boxH}" rx="4"` +
+               ` fill="#161A23" stroke="#262C39"/>`;
+      corps += `<rect x="${x}" y="${y}" width="2.5" height="${boxH}"` +
+               ` fill="${choix ? "#4C9BD6" : "#262C39"}"/>`;
+
+      [[a, y + 16], [b, y + 32]].forEach(([nom, ty]) => {
+        const gagne = nom && choix === nom;
+        corps += `<text x="${x + 10}" y="${ty}" font-family="${F}" font-size="12"` +
+                 ` fill="${gagne ? "#E9ECF3" : "#7E879B"}"` +
+                 ` font-weight="${gagne ? "600" : "400"}">` +
+                 `${esc(nom || "—")}</text>`;
+      });
+    });
+  });
+
+  const titre = `${PROCHAIN.nom}${PROCHAIN.date_fr ? " · " + PROCHAIN.date_fr : ""}`;
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${W + marge * 2}" ` +
+    `height="${H + entete + marge * 2}" viewBox="0 0 ${W + marge * 2} ${H + entete + marge * 2}">` +
+    `<rect width="100%" height="100%" fill="#0E1117"/>` +
+    `<text x="${marge}" y="${marge + 2}" fill="#E9ECF3" font-family="${F}"` +
+    ` font-size="19" font-weight="700" dominant-baseline="hanging">${esc(titre)}</text>` +
+    corps + `</svg>`;
+
+  const image = new Image();
+  const source = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+
+  image.onload = () => {
+    const echelle = 2;                       // pour un rendu net
+    const toile = document.createElement("canvas");
+    toile.width = image.width * echelle;
+    toile.height = image.height * echelle;
+    const ctx = toile.getContext("2d");
+    ctx.scale(echelle, echelle);
+    ctx.drawImage(image, 0, 0);
+
+    const lien = document.createElement("a");
+    lien.download = `pronostic-${PROCHAIN.id}.png`;
+    lien.href = toile.toDataURL("image/png");
+    lien.click();
+  };
+
+  image.onerror = () => {
+    $("prc-etat").textContent = "export impossible dans ce navigateur";
+  };
+
+  image.src = source;
+}
+
+async function afficherProchain() {
+  $("accueil").hidden = true;
+  $("page").hidden = true;
+  $("comparaison").hidden = true;
+  $("tournois").hidden = true;
+  $("chargement").hidden = false;
+  $("chargement").textContent = "Chargement du tirage…";
+
+  try {
+    const url = STATIQUE
+      ? `donnees/prochain.json${INDEX_STATIQUE && INDEX_STATIQUE.genere_le
+          ? `?v=${encodeURIComponent(INDEX_STATIQUE.genere_le)}` : ""}`
+      : "donnees/prochain.json";
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(String(r.status));
+    PROCHAIN = await r.json();
+  } catch {
+    $("chargement").textContent =
+      "Aucun tirage publié pour l'instant. Il se prépare avec tirage.txt " +
+      "puis python prochain.py.";
+    return;
+  }
+
+  const n = PROCHAIN.joueurs.length;
+  const nbTours = Math.round(Math.log2(n));
+  PICKS = chargerPicks(nbTours);
+
+  $("prc-titre").textContent = PROCHAIN.nom;
+  $("prc-intro").textContent =
+    [PROCHAIN.date_fr, PROCHAIN.niveau, PROCHAIN.surface, `${n} joueurs`]
+      .filter(Boolean).join(" · ") +
+    " — cliquez sur un joueur pour le qualifier. Vos choix restent " +
+    "dans ce navigateur.";
+
+  $("prc-onglets").innerHTML = PICKS.map((tour, r) =>
+    `<button type="button" class="tb-onglet" data-depuis="${r}">à partir des ${
+      nomTourParMatchs(tour.length).toLowerCase()}</button>`).join("");
+
+  dessinerPronostic();
+
+  const colonnes = () => [...$("prc-arbre").querySelectorAll(".tb-colonne")];
+  document.querySelectorAll("#prc-onglets .tb-onglet").forEach((b) => {
+    b.addEventListener("click", () => {
+      const depuis = Number(b.dataset.depuis);
+      colonnes().forEach((c) => { c.hidden = Number(c.dataset.rang) < depuis; });
+      document.querySelectorAll("#prc-onglets .tb-onglet").forEach((x) =>
+        x.classList.toggle("actif", x === b));
+    });
+  });
+
+  $("chargement").hidden = true;
+  $("prochain").hidden = false;
+  document.title = `Pronostics ${PROCHAIN.nom} — La montée`;
+}
+
+$("prc-image").addEventListener("click", exporterImage);
+
+$("prc-vider").addEventListener("click", () => {
+  if (!PROCHAIN) return;
+  PICKS = PICKS.map((t) => t.map(() => null));
+  enregistrerPicks();
+  dessinerPronostic();
+});
+
 /* ---------------------------------------------------------- tournois */
 
 // Les tableaux sont reconstitues en croisant les carrieres de la base :
@@ -798,63 +1057,63 @@ function caseTableau(m) {
     </div>`;
 }
 
+// Nombre de tours montres au depart. Au-dela, le tableau depasse
+// largement l'ecran en hauteur comme en largeur.
+const TOURS_VISIBLES = 4;
+
 function rendreTableau(t) {
   const arbre = construireArbre(t.matchs);
   if (!arbre) return null;
 
   const tours = arbre.map((niveau) => (niveau.find(Boolean) || {}).tour || "");
+  const depart = Math.max(0, arbre.length - TOURS_VISIBLES);
 
   const colonnes = arbre.map((niveau, i) => `
-      <div class="tb-colonne" data-rang="${i}">
+      <div class="tb-colonne" data-rang="${i}"${i < depart ? " hidden" : ""}>
         <h4>${NOM_TOUR_FR[tours[i]] || tours[i]}</h4>
         <div class="tb-cases">${niveau.map(caseTableau).join("")}</div>
       </div>`).join("");
 
-  // Les onglets choisissent le tour de depart : afficher les 64es
-  // impose 64 cases de haut, alors que partir des 8es en laisse 8.
-  // C'est la seule facon de garder un tableau lisible sans le reduire.
-  const onglets = tours.map((tour, i) =>
-    `<button type="button" class="tb-onglet" data-depuis="${i}">à partir des ${
-      (NOM_TOUR_FR[tour] || tour).toLowerCase()}</button>`).join("");
+  const caches = tours.slice(0, depart);
+  const bouton = caches.length
+    ? `<button type="button" id="tb-etendre" class="tb-etendre">
+         + ${caches.length} tour${caches.length > 1 ? "s" : ""} précédent${
+           caches.length > 1 ? "s" : ""} (${caches.map((x) =>
+             NOM_TOUR_FR[x] || x).join(", ")})
+       </button>`
+    : "";
 
   const trous = arbre.flat().filter((m) => m && !m.perdant && !m.exempte).length;
 
   return `
-    <div class="tb-onglets">${onglets}</div>
-    <div class="tb-defilement" id="tb-defilement">
-      <div class="tb-arbre" id="tb-arbre">${colonnes}</div>
-    </div>
+    ${bouton}
+    <div class="tb-defilement"><div class="tb-arbre" id="tb-arbre">${colonnes}</div></div>
     ${trous ? `<p class="note">${trous} match${trous > 1 ? "s" : ""} ` +
       `non retrouvé${trous > 1 ? "s" : ""} : opposai${trous > 1 ? "ent" : "t"} ` +
       `deux joueurs absents de la base.</p>` : ""}`;
 }
 
-/** Branche les onglets une fois le tableau dans la page. */
+/**
+ * Un seul bouton, deux etats, et surtout : on ne touche jamais au
+ * defilement. C'est le repositionnement automatique qui rendait la
+ * navigation precedente imprevisible.
+ */
 function activerTableau() {
+  const bouton = document.getElementById("tb-etendre");
   const arbre = document.getElementById("tb-arbre");
-  const zone = document.getElementById("tb-defilement");
-  if (!arbre) return;
+  if (!bouton || !arbre) return;
 
   const colonnes = [...arbre.querySelectorAll(".tb-colonne")];
-  const onglets = [...document.querySelectorAll(".tb-onglet")];
-  if (!colonnes.length) return;
+  const libelle = bouton.textContent.trim();
+  let tout = false;
 
-  function montrerDepuis(depuis) {
-    colonnes.forEach((c) => {
-      c.hidden = Number(c.dataset.rang) < depuis;
-    });
-    onglets.forEach((b) => b.classList.toggle("actif",
-      Number(b.dataset.depuis) === depuis));
-    if (zone) zone.scrollLeft = 0;
-  }
-
-  onglets.forEach((b) =>
-    b.addEventListener("click", () => montrerDepuis(Number(b.dataset.depuis))));
-
-  // On ouvre sur les huitiemes quand ils existent : huit cases tiennent
-  // a l'ecran, et les tours suivants sont ceux qui interessent le plus.
-  const depart = Math.max(0, colonnes.length - 4);
-  montrerDepuis(depart);
+  bouton.addEventListener("click", () => {
+    tout = !tout;
+    const depart = tout ? 0 : Math.max(0, colonnes.length - TOURS_VISIBLES);
+    colonnes.forEach((c) => { c.hidden = Number(c.dataset.rang) < depart; });
+    bouton.textContent = tout ? "− Réduire aux derniers tours" : libelle;
+    bouton.classList.toggle("actif", tout);
+  });
 }
 
 async function afficherTournois() {
@@ -997,6 +1256,7 @@ function afficherAccueil() {
   $("accueil").hidden = false;
   $("comparaison").hidden = true;
   $("tournois").hidden = true;
+  $("prochain").hidden = true;
   remplirGrille();
 }
 
@@ -1300,6 +1560,12 @@ async function router() {
 
   $("comparaison").hidden = true;
   $("tournois").hidden = true;
+  $("prochain").hidden = true;
+
+  if (params.has("prochain")) {
+    await afficherProchain();
+    return;
+  }
 
   const tournoi = params.get("tournoi");
   if (tournoi) {
