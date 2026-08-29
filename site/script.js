@@ -690,19 +690,20 @@ async function chargerTournois() {
   return TOURNOIS;
 }
 
+const COURONNE =
+  '<svg class="ct-couronne" viewBox="0 0 24 18" aria-hidden="true">' +
+  '<path d="M2 16h20l1.5-12-6 4L12 1 6.5 8l-6-4z" fill="currentColor"/></svg>';
+
 function carteTournoi(t) {
-  const vainqueur = t.vainqueur
-    ? (t.vainqueur_slug
-        ? `<a href="?joueur=${t.vainqueur_slug}" class="trn-gagnant">${t.vainqueur}</a>`
-        : `<span class="trn-gagnant">${t.vainqueur}</span>`)
-    : `<span class="trn-gagnant trn-inconnu">finale absente de la base</span>`;
+  const gagnant = t.vainqueur
+    ? `<span class="ct-gagnant">${COURONNE}${t.vainqueur}</span>`
+    : "";
 
   return `
     <a class="carte-tournoi" href="?tournoi=${t.id}">
       <span class="ct-date">${t.date_fr} · ${t.niveau} · ${t.surface}</span>
       <span class="ct-nom">${t.nom}</span>
-      <span class="ct-gagnant">${vainqueur}</span>
-      <span class="ct-matchs">${t.nb_matchs} matchs retrouvés</span>
+      ${gagnant}
     </a>`;
 }
 
@@ -746,12 +747,21 @@ function construireArbre(matchs) {
       [m.vainqueur, m.perdant].forEach((joueur) => {
         if (!joueur) { courant.push(null); return; }
         const trouve = gagnes.get(`${tour}|${joueur.toLowerCase()}`);
-        courant.push(trouve || {
+        if (trouve) { courant.push(trouve); return; }
+
+        // Pas de match trouve a ce tour. Deux causes tres differentes :
+        //  - le joueur est dans la base, donc on connait TOUTE sa
+        //    carriere : s'il n'a pas joue ce tour, il en etait exempte
+        //    (tetes de serie des Masters 1000 sur 96 joueurs) ;
+        //  - il n'y est pas : le match existe mais nous echappe.
+        const slug = (m.vainqueur === joueur ? m.vainqueur_slug : m.perdant_slug);
+        courant.push({
           tour,
           vainqueur: joueur,
-          vainqueur_slug: (m.vainqueur === joueur ? m.vainqueur_slug : m.perdant_slug),
+          vainqueur_slug: slug,
           perdant: null,
           score: null,
+          exempte: Boolean(slug),
         });
       });
     });
@@ -764,9 +774,18 @@ function construireArbre(matchs) {
 function caseTableau(m) {
   if (!m) return `<div class="tb-match tb-vide"></div>`;
 
-  const inconnu = !m.perdant;
+  if (m.exempte) {
+    return `
+      <div class="tb-match tb-exempte">
+        <div class="tb-ligne tb-gagne">
+          ${lienJoueur(m.vainqueur, m.vainqueur_slug, "tb-nom")}
+        </div>
+        <div class="tb-ligne"><span class="tb-mention">exempté</span></div>
+      </div>`;
+  }
+
   return `
-    <div class="tb-match${inconnu ? " tb-partiel" : ""}">
+    <div class="tb-match${m.perdant ? "" : " tb-partiel"}">
       <div class="tb-ligne tb-gagne">
         ${lienJoueur(m.vainqueur, m.vainqueur_slug, "tb-nom")}
         <span class="tb-score">${m.score || ""}</span>
@@ -774,7 +793,7 @@ function caseTableau(m) {
       <div class="tb-ligne">
         ${m.perdant
           ? lienJoueur(m.perdant, m.perdant_slug, "tb-nom")
-          : '<span class="tb-nom tb-inconnu">adversaire inconnu</span>'}
+          : '<span class="tb-nom tb-inconnu">match non retrouvé</span>'}
       </div>
     </div>`;
 }
@@ -783,23 +802,87 @@ function rendreTableau(t) {
   const arbre = construireArbre(t.matchs);
   if (!arbre) return null;
 
-  const colonnes = arbre.map((niveau) => {
-    const tour = (niveau.find(Boolean) || {}).tour || "";
-    return `
-      <div class="tb-colonne">
-        <h4>${NOM_TOUR_FR[tour] || tour}</h4>
-        <div class="tb-cases">${niveau.map(caseTableau).join("")}</div>
-      </div>`;
-  }).join("");
+  const tours = arbre.map((niveau) => (niveau.find(Boolean) || {}).tour || "");
 
-  const trous = arbre.flat().filter((m) => m && !m.perdant).length;
+  const colonnes = arbre.map((niveau, i) => `
+      <div class="tb-colonne" data-tour="${i}">
+        <h4>${NOM_TOUR_FR[tours[i]] || tours[i]}</h4>
+        <div class="tb-cases">${niveau.map(caseTableau).join("")}</div>
+      </div>`).join("");
+
+  const onglets = tours.map((tour, i) =>
+    `<button type="button" class="tb-onglet" data-vers="${i}">${
+      NOM_TOUR_FR[tour] || tour}</button>`).join("");
+
+  // On ne compte que les vrais trous : une exemption n'en est pas un.
+  const trous = arbre.flat().filter((m) => m && !m.perdant && !m.exempte).length;
 
   return `
-    <div class="tb-defilement"><div class="tb-arbre">${colonnes}</div></div>
+    <div class="tb-commandes">
+      <div class="tb-onglets">${onglets}</div>
+      <div class="tb-zoom">
+        <button type="button" id="zoom-moins" title="Dézoomer">−</button>
+        <span id="zoom-valeur">100 %</span>
+        <button type="button" id="zoom-plus" title="Zoomer">+</button>
+      </div>
+    </div>
+    <div class="tb-defilement" id="tb-defilement">
+      <div class="tb-cadre" id="tb-cadre"><div class="tb-arbre" id="tb-arbre">${colonnes}</div></div>
+    </div>
     ${trous ? `<p class="note">${trous} match${trous > 1 ? "s" : ""} ` +
-      `absent${trous > 1 ? "s" : ""} de la base : opposaient deux joueurs ` +
-      `non suivis. Élargir avec <code>python publier.py --top 200</code> ` +
-      `comblerait la plupart.</p>` : ""}`;
+      `non retrouvé${trous > 1 ? "s" : ""} : opposai${trous > 1 ? "ent" : "t"} ` +
+      `deux joueurs absents de la base.</p>` : ""}`;
+}
+
+/** Zoom et navigation par tour, une fois le tableau dans la page. */
+function activerTableau() {
+  const cadre = document.getElementById("tb-cadre");
+  const arbre = document.getElementById("tb-arbre");
+  const zone = document.getElementById("tb-defilement");
+  if (!cadre || !arbre) return;
+
+  // Dimensions naturelles, mesurees une fois avant toute mise a l'echelle.
+  const largeur = arbre.offsetWidth;
+  const hauteur = arbre.offsetHeight;
+
+  let z = 1;
+
+  function appliquer() {
+    arbre.style.transform = `scale(${z})`;
+    // Le cadre porte la taille mise a l'echelle : sans lui, la
+    // transformation ne changerait pas les barres de defilement.
+    cadre.style.width = `${largeur * z}px`;
+    cadre.style.height = `${hauteur * z}px`;
+    document.getElementById("zoom-valeur").textContent = `${Math.round(z * 100)} %`;
+  }
+
+  document.getElementById("zoom-moins").addEventListener("click", () => {
+    z = Math.max(0.4, z - 0.15);
+    appliquer();
+  });
+  document.getElementById("zoom-plus").addEventListener("click", () => {
+    z = Math.min(1.6, z + 0.15);
+    appliquer();
+  });
+
+  document.querySelectorAll(".tb-onglet").forEach((b) => {
+    b.addEventListener("click", () => {
+      const col = arbre.querySelector(`[data-tour="${b.dataset.vers}"]`);
+      if (!col) return;
+
+      document.querySelectorAll(".tb-onglet").forEach((x) =>
+        x.classList.toggle("actif", x === b));
+
+      // On centre la colonne a la main : scrollIntoView ferait aussi
+      // defiler la page entiere, ce qui est desagreable ici.
+      const cible = (col.offsetLeft + col.offsetWidth / 2) * z - zone.clientWidth / 2;
+      zone.scrollTo({ left: Math.max(0, cible), behavior: "smooth" });
+    });
+  });
+
+  // On ouvre sur la finale, la partie la plus lisible du tableau.
+  const dernier = document.querySelectorAll(".tb-onglet");
+  if (dernier.length) dernier[dernier.length - 1].click();
 }
 
 async function afficherTournois() {
@@ -889,6 +972,7 @@ async function afficherTournoi(id) {
     };
     $("vue-arbre").addEventListener("click", () => basculer(true));
     $("vue-liste").addEventListener("click", () => basculer(false));
+    activerTableau();
   }
 
   $("trn-pied").innerHTML =

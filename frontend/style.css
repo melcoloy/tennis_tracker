@@ -644,10 +644,15 @@ button[disabled] { opacity: .45; cursor: default; }
   line-height: 1.15;
 }
 
-.ct-gagnant { font-size: 13px; }
-.trn-gagnant { color: var(--texte); }
-.trn-gagnant.trn-inconnu { color: var(--sourdine); font-style: italic; font-size: 12px; }
-.ct-matchs { font-family: var(--mono); font-size: 9.5px; color: var(--sourdine); opacity: .7; }
+.ct-gagnant {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--sourdine);
+}
+
+.ct-couronne { width: 12px; height: 9px; flex: none; opacity: .85; }
 
 .trn-tour { margin-top: 36px; }
 
@@ -771,6 +776,18 @@ a.trn-v:hover, a.trn-p:hover { text-decoration: underline; }
 }
 
 .tb-match.tb-partiel { border-left-color: var(--trait); }
+
+/* Une exemption n'est pas une lacune : bordure discrete, pas de trait
+   pointille qui suggererait une donnee manquante. */
+.tb-match.tb-exempte { border-left-color: var(--trait); opacity: .8; }
+.tb-mention {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--sourdine);
+  opacity: .7;
+}
 .tb-match.tb-vide { border: 1px dashed var(--trait); background: none; min-height: 46px; }
 
 .tb-ligne { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
@@ -809,3 +826,49 @@ a.tb-nom:hover { text-decoration: underline; }
   .tb-colonne { min-width: 168px; }
   .tb-arbre { gap: 14px; }
 }
+
+/* -------------------------------------- navigation et zoom du tableau */
+
+.tb-commandes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin: 22px 0 6px;
+}
+
+.tb-onglets { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.tb-onglets button {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+}
+
+.tb-onglets button.actif { border-color: var(--dur); color: var(--texte); }
+
+.tb-zoom { display: flex; align-items: center; gap: 8px; }
+
+.tb-zoom button {
+  width: 30px;
+  padding: 6px 0;
+  font-size: 15px;
+  line-height: 1;
+}
+
+#zoom-valeur {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--sourdine);
+  min-width: 46px;
+  text-align: center;
+}
+
+/* Le cadre porte la taille mise a l'echelle : la transformation du
+   contenu ne modifie pas, a elle seule, les barres de defilement. */
+.tb-cadre { transform-origin: 0 0; }
+.tb-arbre { transform-origin: 0 0; transition: transform .18s ease; }
+.tb-defilement { scroll-behavior: smooth; }
