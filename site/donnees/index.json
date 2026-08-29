@@ -1,5 +1,5 @@
 {
-  "genere_le": "2026-08-29 22:23",
+  "genere_le": "2026-08-29 22:31",
   "race_releve_le": "29/08/2026",
   "joueurs": [
     {
@@ -318,6 +318,13 @@
       "nb_matchs": 204
     },
     {
+      "slug": "ChristopherOconnell",
+      "nom": "Christopher Oconnell",
+      "pays": "AUS",
+      "rang": "105",
+      "nb_matchs": 704
+    },
+    {
       "slug": "ClementChidekh",
       "nom": "Clement Chidekh",
       "pays": "FRA",
@@ -421,6 +428,13 @@
       "pays": "CAN",
       "rang": "47",
       "nb_matchs": 575
+    },
+    {
+      "slug": "DiegoDeduraPalomero",
+      "nom": "Diego Dedura Palomero",
+      "pays": "GER",
+      "rang": "190",
+      "nb_matchs": 169
     },
     {
       "slug": "DinoPrizmic",
@@ -960,6 +974,13 @@
       "pays": "AUT",
       "rang": "191",
       "nb_matchs": 386
+    },
+    {
+      "slug": "MackenzieMcdonald",
+      "nom": "Mackenzie Mcdonald",
+      "pays": "USA",
+      "rang": "146",
+      "nb_matchs": 650
     },
     {
       "slug": "MaratSafin",
