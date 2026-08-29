@@ -227,11 +227,24 @@ def main(args):
 
     slugs = corriger(slugs)
 
-    vus, uniques = set(), []
+    # Un identifiant illisible ne doit pas interrompre les 200 autres.
+    # Ca arrive quand un nom contient une lettre que slugifier() ne sait
+    # pas ramener a l'alphabet latin de base.
+    vus, uniques, rejetes = set(), [], []
     for s in slugs:
-        if s not in vus:
-            vus.add(s)
+        if s in vus:
+            continue
+        vus.add(s)
+        try:
+            cache.valider(s)
             uniques.append(s)
+        except ValueError:
+            rejetes.append(s)
+
+    if rejetes:
+        print(f"{len(rejetes)} identifiants ecartes (caracteres non gerables) : "
+              f"{', '.join(repr(r) for r in rejetes[:5])}")
+        print("   -> python trouver_slug.py \"<nom du joueur>\" pour trouver le bon")
 
     if not uniques:
         print("Rien a faire. Essaie : python publier.py --top 50")

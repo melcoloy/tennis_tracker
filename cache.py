@@ -47,6 +47,22 @@ def _decoder(reponse):
         reponse.encoding = reponse.apparent_encoding or "utf-8"
     return reponse.text
 
+# Lettres latines que NFD ne decompose pas : ce ne sont pas des lettres
+# accentuees mais des caracteres a part entiere. Sans cette table,
+# 'Elmer Moller' garde son 'o' barre et l'identifiant est rejete.
+LETTRES_SPECIALES = str.maketrans({
+    "\u00f8": "o", "\u00d8": "O",      # o barre (danois, norvegien)
+    "\u0111": "d", "\u0110": "D",      # d barre (croate, serbe)
+    "\u0142": "l", "\u0141": "L",      # l barre (polonais)
+    "\u00e6": "ae", "\u00c6": "Ae",
+    "\u0153": "oe", "\u0152": "Oe",
+    "\u00df": "ss",
+    "\u00fe": "th", "\u00de": "Th",
+    "\u00f0": "d", "\u00d0": "D",
+    "\u0131": "i", "\u0130": "I",      # i sans point (turc)
+})
+
+
 def slugifier(nom):
     """
     'Felix Auger-Aliassime' -> 'FelixAugerAliassime'
@@ -56,7 +72,7 @@ def slugifier(nom):
     """
     # Les noms peuvent arriver avec des entites HTML et des symboles :
     # live-tennis.eu prefixe d'une coche les qualifies pour le Masters.
-    propre = _html.unescape(nom).replace("\xa0", " ")
+    propre = _html.unescape(nom).replace("\xa0", " ").translate(LETTRES_SPECIALES)
 
     sans_accent = "".join(
         c for c in unicodedata.normalize("NFD", propre)
