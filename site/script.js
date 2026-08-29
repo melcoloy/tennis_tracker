@@ -9,6 +9,11 @@ const API = "http://127.0.0.1:8000";
 let SLUG = new URLSearchParams(location.search).get("joueur") || "ArthurFils";
 const SVG_NS = "http://www.w3.org/2000/svg";
 
+// Hauteur reservee a chaque emplacement du premier tour. Toutes les
+// colonnes partagent la meme hauteur totale, ce qui permet de placer
+// chaque case a (i + 0,5) / n et de garder l'arbre aligne.
+const HAUTEUR_CASE = 54;
+
 const SURFACES = {
   Hard:  { nom: "Dur",          couleur: "var(--dur)" },
   Clay:  { nom: "Terre battue", couleur: "var(--terre)" },
@@ -672,6 +677,11 @@ $("rafraichir").addEventListener("click", async (ev) => {
 let PROCHAIN = null;
 let PICKS = [];
 
+// Tour a partir duquel on affiche. Conserve hors de dessinerPronostic :
+// celle-ci reconstruit tout le HTML, donc les colonnes masquees par les
+// onglets redevenaient visibles des le premier clic sur un joueur.
+let DEPUIS = 0;
+
 function nomTourParMatchs(n) {
   return { 64: "64es de finale", 32: "32es de finale", 16: "16es de finale",
            8: "8es de finale", 4: "Quarts de finale", 2: "Demi-finales",
@@ -737,9 +747,20 @@ function choisir(r, i, nom) {
   dessinerPronostic();
 }
 
+/** Reapplique le tour de depart choisi, apres chaque redessin. */
+function appliquerDepuis() {
+  $("prc-arbre").querySelectorAll(".tb-colonne").forEach((c) => {
+    c.hidden = Number(c.dataset.rang) < DEPUIS;
+  });
+  document.querySelectorAll("#prc-onglets .tb-onglet").forEach((b) =>
+    b.classList.toggle("actif", Number(b.dataset.depuis) === DEPUIS));
+}
+
 function dessinerPronostic() {
   const arbre = $("prc-arbre");
   const n = PROCHAIN.joueurs.length;
+
+  const hauteur = PICKS[0].length * HAUTEUR_CASE;
 
   arbre.innerHTML = PICKS.map((tour, r) => {
     const cases = tour.map((choix, i) => {
@@ -759,15 +780,18 @@ function dessinerPronostic() {
                 </button>`;
       };
 
-      return `<div class="pr-match">
-                ${ligne(a, "à déterminer")}
-                ${ligne(b, "à déterminer")}
+      const haut = ((i + 0.5) / tour.length * 100).toFixed(4);
+      return `<div style="top:${haut}%">
+                <div class="pr-match">
+                  ${ligne(a, "à déterminer")}
+                  ${ligne(b, "à déterminer")}
+                </div>
               </div>`;
     }).join("");
 
     return `<div class="tb-colonne" data-rang="${r}">
               <h4>${nomTourParMatchs(tour.length)}</h4>
-              <div class="tb-cases">${cases}</div>
+              <div class="tb-cases" style="height:${hauteur}px">${cases}</div>
             </div>`;
   }).join("");
 
@@ -776,13 +800,26 @@ function dessinerPronostic() {
       choisir(Number(b.dataset.tour), Number(b.dataset.match), b.dataset.nom));
   });
 
+  appliquerDepuis();
+
   const faits = PICKS.flat().filter(Boolean).length;
   const total = PICKS.flat().length;
   $("prc-etat").textContent = `${faits} / ${total} pronostics`;
 
   const gagnant = PICKS[PICKS.length - 1][0];
+  const zone = $("prc-champion");
+  if (gagnant) {
+    const m = marqueDe(gagnant);
+    zone.innerHTML = COURONNE +
+      `<span class="pr-champion-nom">${gagnant}${m ? ` <span class="pr-marque">${m}</span>` : ""}</span>` +
+      `<span class="pr-champion-label">votre vainqueur</span>`;
+    zone.hidden = false;
+  } else {
+    zone.hidden = true;
+  }
+
   $("prc-pied").textContent = gagnant
-    ? `Votre vainqueur : ${gagnant}`
+    ? `${PROCHAIN.nom} — votre vainqueur : ${gagnant}`
     : `Cliquez sur un joueur pour le qualifier au tour suivant.`;
 }
 
@@ -799,7 +836,8 @@ function exporterImage() {
 
   const colW = 200, gap = 18, boxH = 40, marge = 24, entete = 46;
   const H = nbMax * (boxH + 14);
-  const W = R * (colW + gap) - gap;
+  const avecChampion = Boolean(PICKS[PICKS.length - 1][0]);
+  const W = (R + (avecChampion ? 1 : 0)) * (colW + gap) - gap;
 
   const F = "-apple-system, Segoe UI, Roboto, sans-serif";
   const esc = (t) => String(t || "").replace(/[<>&]/g,
@@ -837,6 +875,19 @@ function exporterImage() {
       });
     });
   });
+
+  // Le vainqueur, mis en avant a droite de la finale.
+  const champion = PICKS[PICKS.length - 1][0];
+  if (champion) {
+    const x = marge + R * (colW + gap);
+    const cy = entete + marge + H / 2;
+    corps += `<rect x="${x}" y="${cy - 26}" width="${colW}" height="52" rx="5"` +
+             ` fill="#12212E" stroke="#4C9BD6"/>`;
+    corps += `<text x="${x + 14}" y="${cy - 6}" font-family="${F}" font-size="9"` +
+             ` fill="#4C9BD6" letter-spacing="1.6">VAINQUEUR</text>`;
+    corps += `<text x="${x + 14}" y="${cy + 16}" font-family="${F}" font-size="16"` +
+             ` font-weight="700" fill="#E9ECF3">${esc(champion)}</text>`;
+  }
 
   const titre = `${PROCHAIN.nom}${PROCHAIN.date_fr ? " · " + PROCHAIN.date_fr : ""}`;
   const svg =
@@ -903,6 +954,7 @@ async function afficherProchain() {
 
   const nbTours = Math.round(Math.log2(n));
   PICKS = chargerPicks(nbTours);
+  DEPUIS = 0;
 
   $("prc-titre").textContent = PROCHAIN.nom;
   $("prc-intro").textContent =
@@ -917,13 +969,10 @@ async function afficherProchain() {
 
   dessinerPronostic();
 
-  const colonnes = () => [...$("prc-arbre").querySelectorAll(".tb-colonne")];
   document.querySelectorAll("#prc-onglets .tb-onglet").forEach((b) => {
     b.addEventListener("click", () => {
-      const depuis = Number(b.dataset.depuis);
-      colonnes().forEach((c) => { c.hidden = Number(c.dataset.rang) < depuis; });
-      document.querySelectorAll("#prc-onglets .tb-onglet").forEach((x) =>
-        x.classList.toggle("actif", x === b));
+      DEPUIS = Number(b.dataset.depuis);
+      appliquerDepuis();
     });
   });
 

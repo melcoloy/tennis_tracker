@@ -758,12 +758,18 @@ a.trn-v:hover, a.trn-p:hover { text-decoration: underline; }
 
 /* Chaque colonne repartit ses matchs sur la meme hauteur : les demies
    se retrouvent naturellement en face du milieu de leurs quarts. */
-.tb-cases {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  flex: 1;
-  gap: 6px;
+/* Chaque case est placee a une position calculee : (i + 0,5) / n de la
+   hauteur. La case i du tour suivant tombe alors exactement entre les
+   cases 2i et 2i+1 du precedent, quelles que soient les hauteurs d'en-tete
+   ou de contenu. La repartition automatique de flexbox, elle, derivait
+   des que les cases n'avaient pas toutes la meme taille. */
+.tb-cases { position: relative; flex: 1; }
+
+.tb-cases > * {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
 }
 
 .tb-match {
@@ -788,7 +794,7 @@ a.trn-v:hover, a.trn-p:hover { text-decoration: underline; }
   color: var(--sourdine);
   opacity: .7;
 }
-.tb-match.tb-vide { border: 1px dashed var(--trait); background: none; min-height: 46px; }
+.tb-match.tb-vide { border: 1px dashed var(--trait); background: none; height: 46px; }
 
 .tb-ligne { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
 .tb-ligne + .tb-ligne { margin-top: 3px; color: var(--sourdine); }
@@ -987,4 +993,42 @@ button.pr-ligne:hover { background: rgba(76, 155, 214, .12); color: var(--texte)
 @media (max-width: 780px) {
   .acc-pronostic { padding: 18px; gap: 16px; }
   .ap-titre { font-size: 21px; }
+}
+
+
+/* ------------------------------------------------------ le champion */
+
+.pr-champion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 26px;
+  padding: 16px 20px;
+  border: 1px solid var(--dur);
+  border-radius: 6px;
+  background: linear-gradient(100deg, rgba(76, 155, 214, .16), transparent 70%);
+}
+
+.pr-champion svg { width: 18px; height: 14px; color: var(--dur); flex: none; }
+
+.pr-champion-nom {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -.015em;
+}
+
+.pr-champion-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--sourdine);
+  margin-left: auto;
+}
+
+/* La case de la finale se distingue du reste du tableau. */
+.tb-colonne:last-child .pr-match:has(.pr-choisi) {
+  border-color: var(--dur);
+  box-shadow: 0 0 0 1px rgba(76, 155, 214, .35);
 }
