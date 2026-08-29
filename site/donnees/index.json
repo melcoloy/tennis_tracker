@@ -1,5 +1,5 @@
 {
-  "genere_le": "2026-08-29 22:31",
+  "genere_le": "2026-08-29 22:36",
   "race_releve_le": "29/08/2026",
   "joueurs": [
     {
@@ -276,6 +276,13 @@
       "nb_matchs": 471
     },
     {
+      "slug": "BuYunchaokete",
+      "nom": "Bu Yunchaokete",
+      "pays": "CHN",
+      "rang": "124",
+      "nb_matchs": 322
+    },
+    {
       "slug": "CameronNorrie",
       "nom": "Cameron Norrie",
       "pays": "GBR",
@@ -470,6 +477,13 @@
       "pays": "USA",
       "rang": "112",
       "nb_matchs": 197
+    },
+    {
+      "slug": "ElmerMoller",
+      "nom": "Elmer Moller",
+      "pays": "DEN",
+      "rang": "170",
+      "nb_matchs": 298
     },
     {
       "slug": "EmilioNava",
@@ -813,6 +827,13 @@
       "pays": "BRA",
       "rang": "26",
       "nb_matchs": 176
+    },
+    {
+      "slug": "JoelSchwaerzler",
+      "nom": "Joel Schwaerzler",
+      "pays": "AUT",
+      "rang": "171",
+      "nb_matchs": 173
     },
     {
       "slug": "JohnMcenroe",
@@ -1331,6 +1352,13 @@
       "pays": "JPN",
       "rang": "87",
       "nb_matchs": 450
+    },
+    {
+      "slug": "SoonWooKwon",
+      "nom": "Soon Woo Kwon",
+      "pays": "KOR",
+      "rang": "150",
+      "nb_matchs": 503
     },
     {
       "slug": "StanWawrinka",
