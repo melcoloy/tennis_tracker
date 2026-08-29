@@ -12,7 +12,9 @@ joueur, et le front bascule automatiquement en mode statique.
 Le resultat va dans site/. Ce dossier est ce qu'on publie.
 """
 
+import hashlib
 import json
+import re
 import shutil
 import sys
 import time
@@ -64,11 +66,31 @@ def construire(slugs):
     dossier_donnees = SORTIE / "donnees"
     dossier_donnees.mkdir(exist_ok=True)
 
-    # 1. le front, tel quel
+    # 1. le front, avec un numero de version sur les fichiers lies
     for f in Path("frontend").iterdir():
         if f.is_file():
             shutil.copy2(f, SORTIE / f.name)
-    print(f"front copie dans {SORTIE}/")
+
+    # Empreinte du CONTENU, pas de la date : elle ne change que si le
+    # fichier a vraiment change. Avec un horodatage, chaque publication
+    # forcait le navigateur a retelecharger un CSS identique, et faisait
+    # differer index.html sans raison a chaque commit.
+    def marque(nom):
+        c = SORTIE / nom
+        return hashlib.md5(c.read_bytes()).hexdigest()[:8] if c.exists() else "0"
+
+    empreinte = f"{marque('style.css')}-{marque('script.js')}"
+
+    # style.css et script.js gardent le meme nom d'une publication a
+    # l'autre : sans ce parametre, le navigateur peut servir une version
+    # d'il y a trois semaines sans que rien ne le signale.
+    page = SORTIE / "index.html"
+    html = page.read_text(encoding="utf-8")
+    html = re.sub(r'(href="style\.css)(\?[^"]*)?"', rf'\1?v={empreinte}"', html)
+    html = re.sub(r'(src="script\.js)(\?[^"]*)?"', rf'\1?v={empreinte}"', html)
+    page.write_text(html, encoding="utf-8")
+
+    print(f"front copie dans {SORTIE}/ (version {empreinte})")
 
     # 2. un fichier par joueur
     index = []
