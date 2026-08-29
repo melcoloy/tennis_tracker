@@ -23,6 +23,7 @@ Ecrit site/donnees/prochain.json, lu par la page « Prochain tournoi ».
 """
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -55,6 +56,20 @@ def lire(fichier=SOURCE):
     return infos, joueurs
 
 
+# Tete de serie ou statut d'entree, colles au nom dans les tirages
+# publies : « Alexander Zverev (1) », « Grigor Dimitrov (Q) ».
+MARQUE = re.compile(r"\s*\((\d{1,3}|Q|WC|LL|PR|SE|ALT)\)\s*$", re.I)
+
+
+def separer(ligne):
+    """'Alexander Zverev (1)' -> ('Alexander Zverev', '1')"""
+    t = ligne.strip()
+    m = MARQUE.search(t)
+    if not m:
+        return t, ""
+    return MARQUE.sub("", t).strip(), m.group(1).upper()
+
+
 def completer(joueurs):
     """
     Complete jusqu'a la puissance de 2 superieure.
@@ -82,10 +97,12 @@ def construire():
     connus = {s.lower() for s in cache.joueurs_en_cache()}
 
     entrees = []
-    for nom in joueurs:
+    for ligne in joueurs:
+        nom, marque = separer(ligne)
         slug = cache.slugifier(nom) if nom else ""
         entrees.append({
             "nom": nom,
+            "marque": marque,
             "slug": slug if slug.lower() in connus else None,
         })
 
@@ -104,8 +121,14 @@ def construire():
     SORTIE.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
 
     reconnus = sum(1 for e in entrees if e["slug"])
+    inconnus = [e["nom"] for e in entrees if e["nom"] and not e["slug"]]
+
     print(f"\n{data['nom']} -- {len(entrees)} places, "
           f"{reconnus} joueurs reconnus dans la base")
+    if inconnus:
+        print(f"{len(inconnus)} non reconnus (pas de fiche cliquable) : "
+              f"{', '.join(inconnus[:8])}"
+              + (" ..." if len(inconnus) > 8 else ""))
     print(f"-> {SORTIE}")
     print("\nRelance ensuite : python publier.py")
 

@@ -708,6 +708,14 @@ function participants(r, i) {
   return [PICKS[r - 1][2 * i], PICKS[r - 1][2 * i + 1]];
 }
 
+// Tete de serie ou statut d'entree, retrouve par le nom : on ne stocke
+// que des noms dans PICKS, la marque suit donc le joueur a tous les tours.
+const MARQUES = new Map();
+
+function marqueDe(nom) {
+  return nom ? (MARQUES.get(nom) || "") : "";
+}
+
 /**
  * Enregistre un choix et efface ceux qui en decoulaient.
  *
@@ -743,9 +751,11 @@ function dessinerPronostic() {
                     <span class="pr-nom">${place}</span></div>`;
         }
         const actif = choix === nom;
+        const m = marqueDe(nom);
         return `<button type="button" class="pr-ligne${actif ? " pr-choisi" : ""}"
                         data-tour="${r}" data-match="${i}" data-nom="${nom}">
                   <span class="pr-nom">${nom}</span>
+                  ${m ? `<span class="pr-marque">${m}</span>` : ""}
                 </button>`;
       };
 
@@ -819,6 +829,11 @@ function exporterImage() {
                  ` fill="${gagne ? "#E9ECF3" : "#7E879B"}"` +
                  ` font-weight="${gagne ? "600" : "400"}">` +
                  `${esc(nom || "—")}</text>`;
+        const m = marqueDe(nom);
+        if (m) {
+          corps += `<text x="${x + colW - 10}" y="${ty}" font-family="${F}"` +
+                   ` font-size="9.5" fill="#7E879B" text-anchor="end">${esc(m)}</text>`;
+        }
       });
     });
   });
@@ -881,6 +896,11 @@ async function afficherProchain() {
   }
 
   const n = PROCHAIN.joueurs.length;
+  MARQUES.clear();
+  PROCHAIN.joueurs.forEach((j) => {
+    if (j.nom && j.marque) MARQUES.set(j.nom, j.marque);
+  });
+
   const nbTours = Math.round(Math.log2(n));
   PICKS = chargerPicks(nbTours);
 
