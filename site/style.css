@@ -763,7 +763,11 @@ a.trn-v:hover, a.trn-p:hover { text-decoration: underline; }
    cases 2i et 2i+1 du precedent, quelles que soient les hauteurs d'en-tete
    ou de contenu. La repartition automatique de flexbox, elle, derivait
    des que les cases n'avaient pas toutes la meme taille. */
-.tb-cases { position: relative; flex: 1; }
+/* flex: none est indispensable : dans une colonne flex, 'flex: 1' pose
+   une base de 0 et ecrase la hauteur posee en ligne. Les cases etant en
+   position absolue, elles ne donnent plus de hauteur -- la colonne se
+   reduisait alors a son seul en-tete. */
+.tb-cases { position: relative; flex: none; }
 
 .tb-cases > * {
   position: absolute;

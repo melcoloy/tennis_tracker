@@ -749,9 +749,16 @@ function choisir(r, i, nom) {
 
 /** Reapplique le tour de depart choisi, apres chaque redessin. */
 function appliquerDepuis() {
+  // La hauteur suit la premiere colonne VISIBLE : en partant des 8es,
+  // huit cases ne doivent pas rester etalees sur la hauteur des 64es.
+  const hauteur = PICKS[DEPUIS].length * HAUTEUR_CASE;
+
   $("prc-arbre").querySelectorAll(".tb-colonne").forEach((c) => {
     c.hidden = Number(c.dataset.rang) < DEPUIS;
+    const cases = c.querySelector(".tb-cases");
+    if (cases) cases.style.height = `${hauteur}px`;
   });
+
   document.querySelectorAll("#prc-onglets .tb-onglet").forEach((b) =>
     b.classList.toggle("actif", Number(b.dataset.depuis) === DEPUIS));
 }
