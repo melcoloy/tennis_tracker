@@ -587,3 +587,225 @@ button[disabled] { opacity: .45; cursor: default; }
   .cmp-table th { width: auto; font-size: 9.5px; }
   .cmp-table, .cmp-table td { font-size: 13px; }
 }
+
+/* ------------------------------------------------------------ tournois */
+
+.tournois { max-width: 1140px; margin: 0 auto; padding: 0 28px 80px; }
+
+.trn-entete { padding: 66px 0 34px; border-bottom: 1px solid var(--trait); }
+
+.trn-entete h1 {
+  margin: 6px 0 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(38px, 6.5vw, 68px);
+  line-height: .95;
+  letter-spacing: -.03em;
+}
+
+.trn-intro { margin: 16px 0 0; max-width: 66ch; font-size: 14px; color: var(--sourdine); }
+
+.grille-tournois {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+  gap: 1px;
+  margin-top: 34px;
+  background: var(--trait);
+  border: 1px solid var(--trait);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.carte-tournoi {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 17px 18px;
+  background: var(--fond);
+  color: inherit;
+  text-decoration: none;
+  transition: background .14s;
+}
+
+.carte-tournoi:hover { background: var(--panneau); }
+
+.ct-date {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--sourdine);
+}
+
+.ct-nom {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -.01em;
+  line-height: 1.15;
+}
+
+.ct-gagnant { font-size: 13px; }
+.trn-gagnant { color: var(--texte); }
+.trn-gagnant.trn-inconnu { color: var(--sourdine); font-style: italic; font-size: 12px; }
+.ct-matchs { font-family: var(--mono); font-size: 9.5px; color: var(--sourdine); opacity: .7; }
+
+.trn-tour { margin-top: 36px; }
+
+.trn-tour h3 {
+  margin: 0 0 12px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--sourdine);
+  font-weight: 400;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--trait);
+}
+
+.trn-match {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto;
+  gap: 14px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--trait);
+  font-size: 14px;
+}
+
+.trn-v { color: var(--texte); font-weight: 500; text-decoration: none; }
+.trn-p { color: var(--sourdine); text-decoration: none; text-align: right; }
+a.trn-v:hover, a.trn-p:hover { text-decoration: underline; }
+.hors-base { opacity: .55; }
+
+.trn-bat {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--sourdine);
+}
+
+.trn-score { font-family: var(--mono); font-size: 12px; color: var(--sourdine); white-space: nowrap; }
+
+.acc-tournois { margin: 46px 0 34px; padding: 28px 0 0; border-top: 1px solid var(--trait); }
+
+.acc-tournois-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+
+.acc-tournois h3 {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.lien-plus {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--sourdine);
+  text-decoration: none;
+  border-bottom: 1px solid var(--trait);
+}
+
+.lien-plus:hover { color: var(--texte); }
+
+@media (max-width: 780px) {
+  .tournois { padding: 0 18px 60px; }
+  .trn-entete { padding: 44px 0 26px; }
+  .trn-match { grid-template-columns: 1fr auto; gap: 4px 10px; }
+  .trn-p { text-align: left; }
+  .trn-score { grid-column: 1 / -1; }
+}
+
+/* ------------------------------------------------- tableau du tournoi */
+
+.trn-bascule { display: flex; gap: 8px; margin: 30px 0 8px; }
+
+.trn-bascule button {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 8px 15px;
+}
+
+.trn-bascule button.actif { border-color: var(--sourdine); background: var(--panneau); }
+
+/* Un tableau de Grand Chelem est large : on le laisse defiler
+   horizontalement plutot que de le comprimer jusqu'a l'illisible. */
+.tb-defilement { overflow-x: auto; padding: 18px 0 8px; }
+
+.tb-arbre { display: flex; gap: 22px; min-width: min-content; }
+
+.tb-colonne { display: flex; flex-direction: column; min-width: 190px; }
+
+.tb-colonne h4 {
+  margin: 0 0 12px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--sourdine);
+  font-weight: 400;
+}
+
+/* Chaque colonne repartit ses matchs sur la meme hauteur : les demies
+   se retrouvent naturellement en face du milieu de leurs quarts. */
+.tb-cases {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex: 1;
+  gap: 6px;
+}
+
+.tb-match {
+  border: 1px solid var(--trait);
+  border-left: 2px solid var(--dur);
+  border-radius: 4px;
+  background: var(--panneau);
+  padding: 7px 10px;
+  font-size: 12.5px;
+}
+
+.tb-match.tb-partiel { border-left-color: var(--trait); }
+.tb-match.tb-vide { border: 1px dashed var(--trait); background: none; min-height: 46px; }
+
+.tb-ligne { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.tb-ligne + .tb-ligne { margin-top: 3px; color: var(--sourdine); }
+
+.tb-gagne .tb-nom { color: var(--texte); font-weight: 500; }
+
+.tb-nom {
+  color: var(--sourdine);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+a.tb-nom:hover { text-decoration: underline; }
+.tb-nom.hors-base { opacity: .55; }
+.tb-inconnu { font-style: italic; opacity: .45; }
+
+.tb-score {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--sourdine);
+  white-space: nowrap;
+}
+
+.note code {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--panneau);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+@media (max-width: 780px) {
+  .tb-colonne { min-width: 168px; }
+  .tb-arbre { gap: 14px; }
+}

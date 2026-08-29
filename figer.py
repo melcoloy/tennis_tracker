@@ -20,6 +20,7 @@ from pathlib import Path
 
 import api
 import cache
+import tournois
 
 SORTIE = Path("site")
 
@@ -72,6 +73,7 @@ def construire(slugs):
     # 2. un fichier par joueur
     index = []
     derniers_volatils = {}
+    pour_tournois = []
     for slug in slugs:
         try:
             data = figer_joueur(slug)
@@ -87,6 +89,7 @@ def construire(slugs):
                           encoding="utf-8")
 
         p = data["profil"]
+        pour_tournois.append((slug, p["fullname"], data["matchs"]["matchs"]))
         index.append({
             "slug": slug,
             "nom": p["fullname"],
@@ -101,7 +104,15 @@ def construire(slugs):
         print("Rien a publier.")
         return
 
-    # 3. l'index : c'est sa presence qui fait basculer le front en
+    # 3. les tournois, reconstitues en croisant les carrieres
+    liste_t = tournois.construire(pour_tournois, cache.slugifier)
+    (dossier_donnees / "tournois.json").write_text(
+        json.dumps({"tournois": liste_t}, ensure_ascii=False),
+        encoding="utf-8")
+    ko = (dossier_donnees / "tournois.json").stat().st_size / 1024
+    print(f"\n{len(liste_t)} tournois reconstitues   {ko:.0f} Ko")
+
+    # 4. l'index : c'est sa presence qui fait basculer le front en
     #    mode statique. Pas de detection d'hote, pas de configuration.
     (dossier_donnees / "index.json").write_text(
         json.dumps({
@@ -111,7 +122,7 @@ def construire(slugs):
         }, ensure_ascii=False, indent=2),
         encoding="utf-8")
 
-    # 4. desactive le traitement Jekyll de GitHub Pages, qui ignore
+    # 5. desactive le traitement Jekyll de GitHub Pages, qui ignore
     #    par defaut les fichiers commencant par un underscore
     (SORTIE / ".nojekyll").write_text("", encoding="utf-8")
 

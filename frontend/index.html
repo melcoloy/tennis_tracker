@@ -64,12 +64,35 @@
     <span class="joueur-msg" id="acc-cmp-msg"></span>
   </div>
 
+  <div class="acc-tournois">
+    <div class="acc-tournois-tete">
+      <h3>Derniers tournois</h3>
+      <a href="?tournois" class="lien-plus">voir les 60 →</a>
+    </div>
+    <div class="grille-tournois" id="acc-grille-tournois"></div>
+  </div>
+
   <div class="grille-joueurs" id="grille-joueurs"></div>
 
   <footer class="pied">
     <span id="acc-fraicheur">—</span>
     <a href="https://github.com/melcoloy/tennis_tracker">code source</a>
   </footer>
+
+</section>
+
+<section id="tournois" class="tournois" hidden>
+
+  <header class="trn-entete">
+    <p class="eyebrow"><a href="?" class="retour">← tous les joueurs</a></p>
+    <h1 id="trn-titre">Tournois</h1>
+    <p class="trn-intro" id="trn-intro"></p>
+  </header>
+
+  <div class="grille-tournois" id="trn-grille"></div>
+  <div id="trn-tableau"></div>
+
+  <footer class="pied"><span id="trn-pied"></span></footer>
 
 </section>
 

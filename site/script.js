@@ -661,6 +661,244 @@ $("rafraichir").addEventListener("click", async (ev) => {
   b.textContent = "Mettre à jour";
 });
 
+
+/* ---------------------------------------------------------- tournois */
+
+// Les tableaux sont reconstitues en croisant les carrieres de la base :
+// aucune source supplementaire. Un match entre deux joueurs absents de
+// la base n'y figure donc pas.
+let TOURNOIS = null;
+
+const NOM_TOUR_FR = {
+  F: "Finale", BR: "3e place", SF: "Demi-finales", QF: "Quarts de finale",
+  R16: "8es de finale", R32: "16es de finale", R64: "32es de finale",
+  R128: "64es de finale", RR: "Phase de poules",
+  Q1: "Qualifications", Q2: "Qualifications", Q3: "Qualifications",
+};
+const ORDRE_TOURS = ["F", "BR", "SF", "QF", "R16", "R32", "R64", "R128", "RR",
+                     "Q3", "Q2", "Q1"];
+
+async function chargerTournois() {
+  if (TOURNOIS) return TOURNOIS;
+  const url = STATIQUE
+    ? `donnees/tournois.json${INDEX_STATIQUE && INDEX_STATIQUE.genere_le
+        ? `?v=${encodeURIComponent(INDEX_STATIQUE.genere_le)}` : ""}`
+    : `${API}/api/tournois`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`tournois indisponibles (${r.status})`);
+  TOURNOIS = (await r.json()).tournois || [];
+  return TOURNOIS;
+}
+
+function carteTournoi(t) {
+  const vainqueur = t.vainqueur
+    ? (t.vainqueur_slug
+        ? `<a href="?joueur=${t.vainqueur_slug}" class="trn-gagnant">${t.vainqueur}</a>`
+        : `<span class="trn-gagnant">${t.vainqueur}</span>`)
+    : `<span class="trn-gagnant trn-inconnu">finale absente de la base</span>`;
+
+  return `
+    <a class="carte-tournoi" href="?tournoi=${t.id}">
+      <span class="ct-date">${t.date_fr} · ${t.niveau} · ${t.surface}</span>
+      <span class="ct-nom">${t.nom}</span>
+      <span class="ct-gagnant">${vainqueur}</span>
+      <span class="ct-matchs">${t.nb_matchs} matchs retrouvés</span>
+    </a>`;
+}
+
+function lienJoueur(nom, slug, classe) {
+  return slug
+    ? `<a href="?joueur=${slug}" class="${classe}">${nom}</a>`
+    : `<span class="${classe} hors-base">${nom}</span>`;
+}
+
+
+/**
+ * Reconstitue l'arbre du tournoi en remontant depuis la finale.
+ *
+ * Le finaliste a gagne une demi-finale : on la cherche, son adversaire
+ * ouvre la branche suivante, et ainsi de suite. La ou un match manque
+ * (deux joueurs absents de la base), la place est conservee avec un
+ * adversaire inconnu -- l'arbre reste complet, les trous sont visibles.
+ *
+ * Renvoie null pour les formats sans tableau (phase de poules).
+ */
+function construireArbre(matchs) {
+  if (matchs.some((m) => m.tour === "RR")) return null;
+
+  const finale = matchs.find((m) => m.tour === "F");
+  if (!finale) return null;
+
+  const gagnes = new Map();
+  matchs.forEach((m) => gagnes.set(`${m.tour}|${m.vainqueur.toLowerCase()}`, m));
+
+  const echelle = ["F", "SF", "QF", "R16", "R32", "R64", "R128"];
+  const presents = echelle.filter((t) => matchs.some((m) => m.tour === t));
+
+  const niveaux = [[finale]];
+
+  for (let i = 1; i < presents.length; i++) {
+    const tour = presents[i];
+    const precedent = niveaux[niveaux.length - 1];
+    const courant = [];
+
+    precedent.forEach((m) => {
+      [m.vainqueur, m.perdant].forEach((joueur) => {
+        if (!joueur) { courant.push(null); return; }
+        const trouve = gagnes.get(`${tour}|${joueur.toLowerCase()}`);
+        courant.push(trouve || {
+          tour,
+          vainqueur: joueur,
+          vainqueur_slug: (m.vainqueur === joueur ? m.vainqueur_slug : m.perdant_slug),
+          perdant: null,
+          score: null,
+        });
+      });
+    });
+    niveaux.push(courant);
+  }
+
+  return niveaux.reverse();       // du premier tour a la finale
+}
+
+function caseTableau(m) {
+  if (!m) return `<div class="tb-match tb-vide"></div>`;
+
+  const inconnu = !m.perdant;
+  return `
+    <div class="tb-match${inconnu ? " tb-partiel" : ""}">
+      <div class="tb-ligne tb-gagne">
+        ${lienJoueur(m.vainqueur, m.vainqueur_slug, "tb-nom")}
+        <span class="tb-score">${m.score || ""}</span>
+      </div>
+      <div class="tb-ligne">
+        ${m.perdant
+          ? lienJoueur(m.perdant, m.perdant_slug, "tb-nom")
+          : '<span class="tb-nom tb-inconnu">adversaire inconnu</span>'}
+      </div>
+    </div>`;
+}
+
+function rendreTableau(t) {
+  const arbre = construireArbre(t.matchs);
+  if (!arbre) return null;
+
+  const colonnes = arbre.map((niveau) => {
+    const tour = (niveau.find(Boolean) || {}).tour || "";
+    return `
+      <div class="tb-colonne">
+        <h4>${NOM_TOUR_FR[tour] || tour}</h4>
+        <div class="tb-cases">${niveau.map(caseTableau).join("")}</div>
+      </div>`;
+  }).join("");
+
+  const trous = arbre.flat().filter((m) => m && !m.perdant).length;
+
+  return `
+    <div class="tb-defilement"><div class="tb-arbre">${colonnes}</div></div>
+    ${trous ? `<p class="note">${trous} match${trous > 1 ? "s" : ""} ` +
+      `absent${trous > 1 ? "s" : ""} de la base : opposaient deux joueurs ` +
+      `non suivis. Élargir avec <code>python publier.py --top 200</code> ` +
+      `comblerait la plupart.</p>` : ""}`;
+}
+
+async function afficherTournois() {
+  $("accueil").hidden = true;
+  $("page").hidden = true;
+  $("comparaison").hidden = true;
+  $("chargement").hidden = false;
+  $("chargement").textContent = "Chargement des tournois…";
+
+  const liste = await chargerTournois();
+
+  $("trn-titre").textContent = "Tournois";
+  $("trn-intro").textContent =
+    `Les ${liste.length} derniers tournois du circuit principal, du 250 au ` +
+    `Grand Chelem. Les tableaux sont reconstitués à partir des carrières ` +
+    `présentes dans la base : cliquez sur un joueur qui y figure.`;
+  $("trn-grille").innerHTML = liste.map(carteTournoi).join("");
+  $("trn-tableau").innerHTML = "";
+  $("trn-pied").textContent = `${liste.length} tournois`;
+
+  $("chargement").hidden = true;
+  $("tournois").hidden = false;
+  document.title = "Tournois — La montée";
+}
+
+async function afficherTournoi(id) {
+  $("accueil").hidden = true;
+  $("page").hidden = true;
+  $("comparaison").hidden = true;
+  $("chargement").hidden = false;
+  $("chargement").textContent = "Chargement du tournoi…";
+
+  const liste = await chargerTournois();
+  const t = liste.find((x) => x.id === id);
+
+  if (!t) {
+    $("chargement").textContent =
+      "Ce tournoi ne fait pas partie des 60 derniers enregistrés.";
+    return;
+  }
+
+  const groupes = ORDRE_TOURS
+    .map((tour) => [NOM_TOUR_FR[tour] || tour,
+                    t.matchs.filter((m) => m.tour === tour)])
+    .filter(([, ms]) => ms.length);
+
+  const autres = t.matchs.filter((m) => !ORDRE_TOURS.includes(m.tour));
+  if (autres.length) groupes.push(["Autres", autres]);
+
+  $("trn-titre").textContent = t.nom;
+  $("trn-intro").textContent =
+    `${t.date_fr} · ${t.niveau} · ${t.surface}` +
+    (t.vainqueur ? ` · vainqueur : ${t.vainqueur} (${t.score_finale})` : "");
+
+  $("trn-grille").innerHTML = "";
+
+  const arbre = rendreTableau(t);
+  const vueListe = groupes.map(([libelle, ms]) => `
+    <div class="trn-tour">
+      <h3>${libelle}</h3>
+      ${ms.map((m) => `
+        <div class="trn-match">
+          ${lienJoueur(m.vainqueur, m.vainqueur_slug, "trn-v")}
+          <span class="trn-bat">bat</span>
+          ${lienJoueur(m.perdant, m.perdant_slug, "trn-p")}
+          <span class="trn-score">${m.score}</span>
+        </div>`).join("")}
+    </div>`).join("");
+
+  // L'arbre parle de lui-meme ; la liste reste accessible d'un clic,
+  // et sert de repli pour les formats sans tableau (phase de poules).
+  $("trn-tableau").innerHTML = arbre
+    ? `<div class="trn-bascule">
+         <button type="button" id="vue-arbre" class="actif">Tableau</button>
+         <button type="button" id="vue-liste">Liste</button>
+       </div>
+       <div id="zone-arbre">${arbre}</div>
+       <div id="zone-liste" hidden>${vueListe}</div>`
+    : vueListe;
+
+  if (arbre) {
+    const basculer = (versArbre) => {
+      $("zone-arbre").hidden = !versArbre;
+      $("zone-liste").hidden = versArbre;
+      $("vue-arbre").classList.toggle("actif", versArbre);
+      $("vue-liste").classList.toggle("actif", !versArbre);
+    };
+    $("vue-arbre").addEventListener("click", () => basculer(true));
+    $("vue-liste").addEventListener("click", () => basculer(false));
+  }
+
+  $("trn-pied").innerHTML =
+    `${t.nb_matchs} matchs retrouvés · <a href="?tournois">tous les tournois</a>`;
+
+  $("chargement").hidden = true;
+  $("tournois").hidden = false;
+  document.title = `${t.nom} — La montée`;
+}
+
 /* ------------------------------------------------------------ accueil */
 
 function remplirGrille() {
@@ -681,6 +919,16 @@ function remplirGrille() {
       <span class="cj-matchs">${j.nb_matchs ? j.nb_matchs + " matchs" : ""}</span>
     </a>`).join("");
 
+  chargerTournois()
+    .then((liste) => {
+      $("acc-grille-tournois").innerHTML =
+        liste.slice(0, 6).map(carteTournoi).join("");
+    })
+    .catch(() => {
+      // les tournois sont un complement : leur absence ne bloque rien
+      $("acc-grille-tournois").innerHTML = "";
+    });
+
   $("acc-fraicheur").textContent = STATIQUE
     ? `${tri.length} joueurs · données figées le ${INDEX_STATIQUE.genere_le}`
     : `${tri.length} joueurs en cache · mode développement`;
@@ -692,6 +940,7 @@ function afficherAccueil() {
   $("page").hidden = true;
   $("accueil").hidden = false;
   $("comparaison").hidden = true;
+  $("tournois").hidden = true;
   remplirGrille();
 }
 
@@ -994,6 +1243,18 @@ async function router() {
   const demande = params.get("joueur");
 
   $("comparaison").hidden = true;
+  $("tournois").hidden = true;
+
+  const tournoi = params.get("tournoi");
+  if (tournoi) {
+    await afficherTournoi(tournoi);
+    return;
+  }
+
+  if (params.has("tournois")) {
+    await afficherTournois();
+    return;
+  }
 
   if (comparer) {
     const slugs = comparer.split(",").map((s) => s.trim()).filter(Boolean);
@@ -1021,7 +1282,7 @@ window.addEventListener("popstate", router);
 // meme sans JavaScript. On les intercepte seulement pour eviter un
 // rechargement complet.
 document.addEventListener("click", (ev) => {
-  const lien = ev.target.closest("a.carte-joueur, a.retour");
+  const lien = ev.target.closest('a.carte-joueur, a.retour, a.carte-tournoi, a.lien-plus, a[href^="?"]');
   if (!lien || ev.metaKey || ev.ctrlKey || ev.shiftKey) return;
   ev.preventDefault();
   history.pushState({}, "", lien.getAttribute("href"));

@@ -21,6 +21,7 @@ import annuaire
 import cache
 import race
 import source
+import tournois
 
 JOUEUR_DEFAUT = "ArthurFils"
 
@@ -241,6 +242,26 @@ def recherche(nom: str = Query(..., min_length=2, description="ex. Carlos Alcara
     return {"trouve": True, "slug": slug,
             "nom": d["profil"]["fullname"],
             "nb_matchs": len(d["matchs"])}
+
+
+@app.get("/api/tournois")
+def liste_tournois(limite: int = Query(60, ge=1, le=300)):
+    """
+    Tableaux reconstitues a partir des joueurs deja telecharges.
+
+    Plus la base compte de joueurs, plus les tableaux sont complets.
+    """
+    pour = []
+    for slug in cache.joueurs_en_cache():
+        try:
+            d = donnees(slug)
+        except Exception:
+            continue
+        pour.append((slug, d["profil"]["fullname"],
+                     matchs(joueur=slug, annee=None, niveau=None, resultat=None,
+                            adversaire=None, limite=2000)["matchs"]))
+
+    return {"tournois": tournois.construire(pour, cache.slugifier, limite)}
 
 
 @app.post("/api/rafraichir")
