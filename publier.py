@@ -7,6 +7,7 @@ python figer.py, cd site, git add, git commit, git push.
     python publier.py                 # rafraichit les joueurs deja publies
     python publier.py --top 50        # ajoute le top 50 mondial
     python publier.py --legendes      # ajoute les grands joueurs retires
+    python publier.py --forcer        # retelecharge tout, sans attendre 24 h
     python publier.py CarlosAlcaraz JannikSinner
     python publier.py --top 100 --sans-push   # construit sans publier
 
@@ -27,6 +28,11 @@ import figer
 PAUSE_INITIALE = 3.0    # secondes entre deux telechargements
 PAUSE_MAX = 25.0
 ESSAIS = 4              # tentatives par joueur avant d'abandonner
+
+# --forcer : retelecharge tout, sans attendre les 24 h. Utile le
+# lendemain d'une finale, quand la copie locale date de la veille au
+# soir et ignore donc le dernier match.
+FORCER = False
 
 # Le dernier --top utilise est memorise ici, pour que la commande nue
 # fasse la meme chose que la derniere fois. Sans ca, un joueur entrant
@@ -87,7 +93,7 @@ def telecharger(slugs):
     de lui imposer une cadence -- on ralentit apres chaque 429, et on
     accelere doucement quand tout se passe bien.
     """
-    a_faire = [s for s in slugs if cache.est_perimee(s)]
+    a_faire = slugs if FORCER else [s for s in slugs if cache.est_perimee(s)]
     if not a_faire:
         print(f"{len(slugs)} joueurs deja en cache et a jour.")
         return slugs
@@ -102,7 +108,7 @@ def telecharger(slugs):
     for i, slug in enumerate(a_faire, 1):
         for essai in range(1, ESSAIS + 1):
             try:
-                _, message = cache.rafraichir(slug)
+                _, message = cache.rafraichir(slug, force=FORCER)
                 print(f"  [{i:>3}/{len(a_faire)}] {slug:<28} {message}")
                 ok.append(slug)
                 pause = max(PAUSE_INITIALE, pause * 0.9)   # on relache
@@ -176,6 +182,11 @@ def main(args):
     global PAUSE_INITIALE
     sans_push = "--sans-push" in args
     args = [a for a in args if a != "--sans-push"]
+
+    global FORCER
+    if "--forcer" in args:
+        FORCER = True
+        args = [a for a in args if a != "--forcer"]
 
     if "--pause" in args:
         i = args.index("--pause")

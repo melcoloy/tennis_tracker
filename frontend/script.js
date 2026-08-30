@@ -1144,10 +1144,20 @@ function rendreTableau(t) {
   const tours = arbre.map((niveau) => (niveau.find(Boolean) || {}).tour || "");
   const depart = Math.max(0, arbre.length - TOURS_VISIBLES);
 
+  // Chaque case est posee a (i + 0,5) / n de la hauteur : la case i d'un
+  // tour tombe alors pile entre les cases 2i et 2i+1 du precedent. La
+  // hauteur suit la premiere colonne VISIBLE, sinon huit cases
+  // resteraient etalees sur la hauteur des soixante-quatre.
+  const hauteur = arbre[depart].length * HAUTEUR_CASE;
+
   const colonnes = arbre.map((niveau, i) => `
       <div class="tb-colonne" data-rang="${i}"${i < depart ? " hidden" : ""}>
         <h4>${NOM_TOUR_FR[tours[i]] || tours[i]}</h4>
-        <div class="tb-cases">${niveau.map(caseTableau).join("")}</div>
+        <div class="tb-cases" style="height:${hauteur}px">${
+          niveau.map((m, k) =>
+            `<div style="top:${((k + 0.5) / niveau.length * 100).toFixed(4)}%">${
+              caseTableau(m)}</div>`).join("")
+        }</div>
       </div>`).join("");
 
   const caches = tours.slice(0, depart);
@@ -1186,7 +1196,19 @@ function activerTableau() {
   bouton.addEventListener("click", () => {
     tout = !tout;
     const depart = tout ? 0 : Math.max(0, colonnes.length - TOURS_VISIBLES);
-    colonnes.forEach((c) => { c.hidden = Number(c.dataset.rang) < depart; });
+
+    // La hauteur se recalcule sur la premiere colonne visible.
+    const premiere = colonnes[depart];
+    const nb = premiere
+      ? premiere.querySelectorAll(".tb-cases > *").length : 1;
+    const hauteur = nb * HAUTEUR_CASE;
+
+    colonnes.forEach((c) => {
+      c.hidden = Number(c.dataset.rang) < depart;
+      const cases = c.querySelector(".tb-cases");
+      if (cases) cases.style.height = `${hauteur}px`;
+    });
+
     bouton.textContent = tout ? "− Réduire aux derniers tours" : libelle;
     bouton.classList.toggle("actif", tout);
   });
