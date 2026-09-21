@@ -8,3 +8,7 @@
 # et ainsi de suite. Une ligne vide vaut une place a determiner.
 # Les lignes commencant par # sont ignorees.
 
+rien 
+nothing
+lul
+pourquoi faire
