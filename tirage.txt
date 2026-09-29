@@ -1,14 +1,42 @@
 # Nom: Rien
-# Date: -----
-# Surface: -----
-# Niveau: -----
+# Date: 20260930
+# Surface: Hard
+# Niveau: Atp 500
 
 # Un joueur par ligne, dans l'ordre du tableau (de haut en bas).
 # Le premier affronte le deuxieme, le troisieme affronte le quatrieme,
 # et ainsi de suite. Une ligne vide vaut une place a determiner.
 # Les lignes commencant par # sont ignorees.
 
-rien 
-nothing
-lul
-pourquoi faire
+Carlos Alcaraz (1)
+Alex Michelsen
+Matteo Arnaldi
+Rei Sakamoto (WC)
+Denis Shapovalov
+Sho Shimabukuro (WC)
+Alejandro Tabilo
+Tommy Paul (7)
+Taylor Fritz (3)
+Jaume Munar (Q) 
+Lorenzo Musetti
+Arthur Fery
+Holger Rune
+Kyrian Jacquet 
+Luciano Darderi
+Casper Ruud (6)
+Brandon Nakashima (5)
+Ugo Humbert
+Jiří Lehečka
+Zizou Bergs
+Alejandro Davidovich Fokina
+Matteo Berrettini
+Adolfo Daniel Vallejo (Q)
+Rafael Jódar (4)
+Valentin Vacherot (8)
+Alexander Blockx
+Tomás Martín Etcheverry
+Stefanos Tsitsipas (Q)
+Arthur Fils (Q)
+Luca Van Assche 
+Kei Nishikori (WC)
+Frances Tiafoe (2)
