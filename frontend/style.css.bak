@@ -1036,26 +1036,3 @@ button.pr-ligne:hover { background: rgba(76, 155, 214, .12); color: var(--texte)
   border-color: var(--dur);
   box-shadow: 0 0 0 1px rgba(76, 155, 214, .35);
 }
-
-/* ------------------------------------------- plusieurs tournois ouverts */
-
-.acc-pronostics { display: flex; flex-direction: column; gap: 12px; margin: 42px 0 0; }
-.acc-pronostics .acc-pronostic { margin: 0; }
-
-.prc-choix { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
-
-.prc-tab {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  padding: 9px 15px;
-  border: 1px solid var(--trait);
-  border-radius: 5px;
-  color: var(--sourdine);
-  text-decoration: none;
-  transition: border-color .14s, color .14s;
-}
-
-.prc-tab:hover { color: var(--texte); }
-.prc-tab.actif { border-color: var(--dur); color: var(--texte); background: var(--panneau); }

@@ -674,6 +674,9 @@ $("rafraichir").addEventListener("click", async (ev) => {
 // donnees ne contiennent que des matchs joues, jamais un tableau a
 // venir. Les choix restent dans le navigateur de l'utilisateur.
 
+// Plusieurs tournois peuvent etre ouverts la meme semaine : prochain.json
+// contient une liste, et l'URL (?prochain=<id>) designe celui affiche.
+let PROCHAINS = [];
 let PROCHAIN = null;
 let PICKS = [];
 
@@ -930,7 +933,26 @@ function exporterImage() {
   image.src = source;
 }
 
-async function afficherProchain() {
+/** Tous les tirages publies, charges une seule fois. */
+async function chargerProchains() {
+  if (PROCHAINS.length) return PROCHAINS;
+
+  const url = STATIQUE
+    ? `donnees/prochain.json${INDEX_STATIQUE && INDEX_STATIQUE.genere_le
+        ? `?v=${encodeURIComponent(INDEX_STATIQUE.genere_le)}` : ""}`
+    : "donnees/prochain.json";
+
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(String(r.status));
+  const d = await r.json();
+
+  // d.tournois est le format actuel ; un objet seul a la racine est
+  // l'ancien, encore accepte pour ne pas casser un fichier deja publie.
+  PROCHAINS = d.tournois || (d.joueurs ? [d] : []);
+  return PROCHAINS;
+}
+
+async function afficherProchain(id) {
   $("accueil").hidden = true;
   $("page").hidden = true;
   $("comparaison").hidden = true;
@@ -938,20 +960,26 @@ async function afficherProchain() {
   $("chargement").hidden = false;
   $("chargement").textContent = "Chargement du tirage…";
 
+  let liste;
   try {
-    const url = STATIQUE
-      ? `donnees/prochain.json${INDEX_STATIQUE && INDEX_STATIQUE.genere_le
-          ? `?v=${encodeURIComponent(INDEX_STATIQUE.genere_le)}` : ""}`
-      : "donnees/prochain.json";
-    const r = await fetch(url);
-    if (!r.ok) throw new Error(String(r.status));
-    PROCHAIN = await r.json();
+    liste = await chargerProchains();
+    if (!liste.length) throw new Error("aucun tirage");
   } catch {
     $("chargement").textContent =
-      "Aucun tirage publié pour l'instant. Il se prépare avec tirage.txt " +
-      "puis python prochain.py.";
+      "Aucun tirage publié pour l'instant. Il se prépare avec un fichier " +
+      "dans tirages/ puis python prochain.py.";
     return;
   }
+
+  // Sans identifiant valable, on ouvre le premier de la liste.
+  PROCHAIN = liste.find((t) => t.id === id) || liste[0];
+
+  // Selecteur, seulement s'il y a plusieurs tournois a departager.
+  $("prc-choix").innerHTML = liste.length > 1
+    ? liste.map((t) =>
+        `<a class="prc-tab${t.id === PROCHAIN.id ? " actif" : ""}" ` +
+        `href="?prochain=${t.id}">${t.nom}</a>`).join("")
+    : "";
 
   const n = PROCHAIN.joueurs.length;
   MARQUES.clear();
@@ -1332,18 +1360,23 @@ function remplirGrille() {
       <span class="cj-matchs">${j.nb_matchs ? j.nb_matchs + " matchs" : ""}</span>
     </a>`).join("");
 
-  // Bandeau du prochain tournoi. Il ne s'affiche que si un tirage a
-  // ete publie : sans prochain.json, le bloc reste masque.
-  fetch("donnees/prochain.json")
-    .then((r) => (r.ok ? r.json() : Promise.reject()))
-    .then((p) => {
-      $("ap-titre").textContent = p.nom;
-      $("ap-detail").textContent =
-        [p.date_fr, p.niveau, p.surface, `${p.joueurs.length} joueurs`]
-          .filter(Boolean).join(" · ");
-      $("acc-pronostic").hidden = false;
+  // Un bandeau par tournoi a venir. Rien de publie, rien d'affiche.
+  chargerProchains()
+    .then((tirages) => {
+      $("acc-pronostics").innerHTML = tirages.map((p) => `
+        <a class="acc-pronostic" href="?prochain=${p.id}">
+          <div class="ap-texte">
+            <span class="ap-etiquette">Pronostics</span>
+            <span class="ap-titre">${p.nom}</span>
+            <span class="ap-detail">${
+              [p.date_fr, p.niveau, p.surface, `${p.joueurs.length} joueurs`]
+                .filter(Boolean).join(" · ")}</span>
+          </div>
+          <span class="ap-bouton">Remplir mon tableau →</span>
+        </a>`).join("");
+      $("acc-pronostics").hidden = !tirages.length;
     })
-    .catch(() => { $("acc-pronostic").hidden = true; });
+    .catch(() => { $("acc-pronostics").hidden = true; });
 
   chargerTournois()
     .then((liste) => {
@@ -1674,7 +1707,7 @@ async function router() {
   $("prochain").hidden = true;
 
   if (params.has("prochain")) {
-    await afficherProchain();
+    await afficherProchain(params.get("prochain"));
     return;
   }
 

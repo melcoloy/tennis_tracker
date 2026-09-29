@@ -51,7 +51,14 @@
     </div>
   </div>
 
-  <div class="acc-pronostics" id="acc-pronostics" hidden></div>
+  <a class="acc-pronostic" id="acc-pronostic" href="?prochain" hidden>
+    <div class="ap-texte">
+      <span class="ap-etiquette">Pronostics</span>
+      <span class="ap-titre" id="ap-titre">—</span>
+      <span class="ap-detail" id="ap-detail">—</span>
+    </div>
+    <span class="ap-bouton">Remplir mon tableau →</span>
+  </a>
 
   <div class="acc-recherche">
     <input id="acc-champ" type="search" list="joueurs-connus"
@@ -94,7 +101,6 @@
     <p class="eyebrow"><a href="?" class="retour">← tous les joueurs</a></p>
     <h1 id="prc-titre">Prochain tournoi</h1>
     <p class="trn-intro" id="prc-intro"></p>
-    <div class="prc-choix" id="prc-choix"></div>
   </header>
 
   <div class="prc-commandes">

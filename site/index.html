@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=4e1485c1-95a91535">
+<link rel="stylesheet" href="style.css?v=47831198-68a7208a">
 </head>
 <body>
 
@@ -51,14 +51,7 @@
     </div>
   </div>
 
-  <a class="acc-pronostic" id="acc-pronostic" href="?prochain" hidden>
-    <div class="ap-texte">
-      <span class="ap-etiquette">Pronostics</span>
-      <span class="ap-titre" id="ap-titre">—</span>
-      <span class="ap-detail" id="ap-detail">—</span>
-    </div>
-    <span class="ap-bouton">Remplir mon tableau →</span>
-  </a>
+  <div class="acc-pronostics" id="acc-pronostics" hidden></div>
 
   <div class="acc-recherche">
     <input id="acc-champ" type="search" list="joueurs-connus"
@@ -101,6 +94,7 @@
     <p class="eyebrow"><a href="?" class="retour">← tous les joueurs</a></p>
     <h1 id="prc-titre">Prochain tournoi</h1>
     <p class="trn-intro" id="prc-intro"></p>
+    <div class="prc-choix" id="prc-choix"></div>
   </header>
 
   <div class="prc-commandes">
@@ -291,6 +285,6 @@
 
 </main>
 
-<script src="script.js?v=4e1485c1-95a91535"></script>
+<script src="script.js?v=47831198-68a7208a"></script>
 </body>
 </html>

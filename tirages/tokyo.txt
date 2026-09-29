@@ -1,13 +1,7 @@
-# Nom: Tokyo Atp
+# Nom: Tokyo
 # Date: 20260930
 # Surface: Hard
-# Niveau: Atp 500
-
-# Un joueur par ligne, dans l'ordre du tableau (de haut en bas).
-# Le premier affronte le deuxieme, le troisieme affronte le quatrieme,
-# et ainsi de suite. Une ligne vide vaut une place a determiner.
-# Les lignes commencant par # sont ignorees.
-
+# Niveau: ATP 500 
 Carlos Alcaraz (1)
 Alex Michelsen
 Matteo Arnaldi
