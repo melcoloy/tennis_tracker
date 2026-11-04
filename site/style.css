@@ -1059,3 +1059,26 @@ button.pr-ligne:hover { background: rgba(76, 155, 214, .12); color: var(--texte)
 
 .prc-tab:hover { color: var(--texte); }
 .prc-tab.actif { border-color: var(--dur); color: var(--texte); background: var(--panneau); }
+
+/* ------------------------------------------ pronostics : lisibilite */
+
+/* Colonnes plus larges : « Alejandro Davidovich Fokina » et sa tete de
+   serie doivent tenir sans etre coupes. Le tableau defile deja en
+   largeur, quelques colonnes de plus ne genent pas. */
+#prc-arbre { gap: 28px; }
+#prc-arbre .tb-colonne { min-width: 235px; }
+
+/* Chaque affiche se detache du fond : bordure plus nette et ombre
+   legere, pour qu'on voie d'un coup d'oeil quels deux joueurs vont
+   ensemble. */
+#prc-arbre .pr-match {
+  border-color: rgba(255, 255, 255, .14);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+}
+#prc-arbre .pr-ligne { padding: 8px 12px; font-size: 13px; }
+#prc-arbre .pr-ligne + .pr-ligne { border-top-color: rgba(255, 255, 255, .08); }
+
+@media (max-width: 780px) {
+  #prc-arbre { gap: 16px; }
+  #prc-arbre .tb-colonne { min-width: 200px; }
+}
