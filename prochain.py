@@ -27,6 +27,9 @@ Les mentions (1), (Q), (WC), (LL) sont reconnues et affichees a part.
 
 Le fichier tirage.txt a la racine reste accepte, pour compatibilite.
 
+Les tournois en cours sont remplis automatiquement par tirages_auto.py.
+Les tournois commences depuis plus de JOURS_MAX jours sont ignores.
+
     python prochain.py
 
 Ecrit site/donnees/prochain.json, lu par la page « Pronostics ».
@@ -35,6 +38,7 @@ Ecrit site/donnees/prochain.json, lu par la page « Pronostics ».
 import json
 import re
 import sys
+from datetime import date, timedelta
 from pathlib import Path
 
 import cache
@@ -47,6 +51,12 @@ SORTIE = Path("site") / "donnees" / "prochain.json"
 # Tete de serie ou statut d'entree, colles au nom dans les tirages
 # publies : « Alexander Zverev (1) », « Grigor Dimitrov (Q) ».
 MARQUE = re.compile(r"\s*\((\d{1,3}|Q|WC|LL|PR|SE|ALT)\)\s*$", re.I)
+
+# Au-dela, un tournoi est fini : il quitte la page Pronostics.
+JOURS_MAX = 10
+
+# Place vide en face d'une tete de serie exemptee du premier tour.
+BYE = "Bye"
 
 
 def separer(ligne):
@@ -114,7 +124,8 @@ def un_tournoi(fichier, connus, table):
     nom_t = infos.get("nom", fichier.stem.replace("-", " ").title())
 
     reconnus = sum(1 for e in entrees if e["slug"])
-    inconnus = [e["nom"] for e in entrees if e["nom"] and not e["slug"]]
+    inconnus = [e["nom"] for e in entrees
+                if e["nom"] and e["nom"] != BYE and not e["slug"]]
 
     print(f"  {nom_t:<22} {len(entrees):>3} places, {reconnus} reconnus")
     if inconnus:
@@ -162,6 +173,14 @@ def construire():
 
     if not tournois:
         raise SystemExit("Aucun tirage exploitable.")
+
+    # Les tournois finis disparaissent. On ecrit quand meme le fichier,
+    # meme vide : sinon l'ancien prochain.json resterait publie.
+    limite = (date.today() - timedelta(days=JOURS_MAX)).strftime("%Y%m%d")
+    finis = [t["nom"] for t in tournois if t["date"] and t["date"] < limite]
+    if finis:
+        print(f"\n  termines, ignores : {', '.join(finis)}")
+    tournois = [t for t in tournois if not t["date"] or t["date"] >= limite]
 
     tournois.sort(key=lambda t: t["date"])
 

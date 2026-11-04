@@ -14,6 +14,11 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 // chaque case a (i + 0,5) / n et de garder l'arbre aligne.
 const HAUTEUR_CASE = 54;
 
+// Les cases de pronostic portent deux boutons de joueur, plus hautes
+// qu'une case de resultat : a 54 px, celles du premier tour se
+// chevauchaient et on ne voyait plus quel joueur affrontait qui.
+const HAUTEUR_PRONOSTIC = 84;
+
 const SURFACES = {
   Hard:  { nom: "Dur",          couleur: "var(--dur)" },
   Clay:  { nom: "Terre battue", couleur: "var(--terre)" },
@@ -695,16 +700,38 @@ function cleStockage() {
   return `pronostic:${PROCHAIN.id}`;
 }
 
+// Place vide en face d'une tete de serie exemptee du premier tour.
+const BYE = "Bye";
+
+/** Joueurs reels d'un tirage, sans les places vides ni les byes. */
+function nbJoueurs(t) {
+  return t.joueurs.filter((j) => j.nom && j.nom !== BYE).length;
+}
+
+/**
+ * Qualifie d'office, au premier tour, tout joueur oppose a un bye.
+ * Appelee a chaque chargement et apres chaque choix : meme apres un
+ * double clic d'annulation, l'exempte reste qualifie.
+ */
+function appliquerByes(picks) {
+  picks[0].forEach((choix, i) => {
+    const [a, b] = participants(0, i);
+    if (b === BYE && a && a !== BYE) picks[0][i] = a;
+    else if (a === BYE && b && b !== BYE) picks[0][i] = b;
+  });
+  return picks;
+}
+
 function chargerPicks(nbTours) {
   try {
     const brut = localStorage.getItem(cleStockage());
     if (brut) {
       const p = JSON.parse(brut);
-      if (Array.isArray(p) && p.length === nbTours) return p;
+      if (Array.isArray(p) && p.length === nbTours) return appliquerByes(p);
     }
   } catch { /* stockage indisponible : on repart a vide */ }
-  return Array.from({ length: nbTours },
-    (_, r) => new Array(PROCHAIN.joueurs.length / 2 ** (r + 1)).fill(null));
+  return appliquerByes(Array.from({ length: nbTours },
+    (_, r) => new Array(PROCHAIN.joueurs.length / 2 ** (r + 1)).fill(null)));
 }
 
 function enregistrerPicks() {
@@ -746,6 +773,7 @@ function choisir(r, i, nom) {
     index = Math.floor(index / 2);
   }
 
+  appliquerByes(PICKS);
   enregistrerPicks();
   dessinerPronostic();
 }
@@ -754,7 +782,7 @@ function choisir(r, i, nom) {
 function appliquerDepuis() {
   // La hauteur suit la premiere colonne VISIBLE : en partant des 8es,
   // huit cases ne doivent pas rester etalees sur la hauteur des 64es.
-  const hauteur = PICKS[DEPUIS].length * HAUTEUR_CASE;
+  const hauteur = PICKS[DEPUIS].length * HAUTEUR_PRONOSTIC;
 
   $("prc-arbre").querySelectorAll(".tb-colonne").forEach((c) => {
     c.hidden = Number(c.dataset.rang) < DEPUIS;
@@ -770,16 +798,16 @@ function dessinerPronostic() {
   const arbre = $("prc-arbre");
   const n = PROCHAIN.joueurs.length;
 
-  const hauteur = PICKS[0].length * HAUTEUR_CASE;
+  const hauteur = PICKS[0].length * HAUTEUR_PRONOSTIC;
 
   arbre.innerHTML = PICKS.map((tour, r) => {
     const cases = tour.map((choix, i) => {
       const [a, b] = participants(r, i);
 
       const ligne = (nom, place) => {
-        if (!nom) {
+        if (!nom || nom === BYE) {
           return `<div class="pr-ligne pr-attente">
-                    <span class="pr-nom">${place}</span></div>`;
+                    <span class="pr-nom">${nom === BYE ? "exempté" : place}</span></div>`;
         }
         const actif = choix === nom;
         const m = marqueDe(nom);
@@ -993,7 +1021,7 @@ async function afficherProchain(id) {
 
   $("prc-titre").textContent = PROCHAIN.nom;
   $("prc-intro").textContent =
-    [PROCHAIN.date_fr, PROCHAIN.niveau, PROCHAIN.surface, `${n} joueurs`]
+    [PROCHAIN.date_fr, PROCHAIN.niveau, PROCHAIN.surface, `${nbJoueurs(PROCHAIN)} joueurs`]
       .filter(Boolean).join(" · ") +
     " — cliquez sur un joueur pour le qualifier. Vos choix restent " +
     "dans ce navigateur.";
@@ -1369,7 +1397,7 @@ function remplirGrille() {
             <span class="ap-etiquette">Pronostics</span>
             <span class="ap-titre">${p.nom}</span>
             <span class="ap-detail">${
-              [p.date_fr, p.niveau, p.surface, `${p.joueurs.length} joueurs`]
+              [p.date_fr, p.niveau, p.surface, `${nbJoueurs(p)} joueurs`]
                 .filter(Boolean).join(" · ")}</span>
           </div>
           <span class="ap-bouton">Remplir mon tableau →</span>
