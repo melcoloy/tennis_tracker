@@ -9,4 +9,4 @@ python publier.py --sans-push pour reconstruire et regarder sur localhost:8080 a
 
 pour les tableaux à pronostiquer 
 
-remplacer le contenu de tirage.txt, puis python prochain.py et python publier.py
+remplacer le contenu de tirage\, puis python prochain.py et python publier.py
