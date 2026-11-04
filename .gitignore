@@ -16,3 +16,8 @@ donnees.json
 # divers
 .DS_Store
 *.tmp
+# journaux des mises a jour automatiques
+logs/
+
+# journaux des mises a jour automatiques
+logs/

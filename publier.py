@@ -167,7 +167,7 @@ def pousser():
     n = len(sortie.splitlines())
     print(f"\n{n} fichiers modifies, publication...")
 
-    git("add", "-A")
+    git("add", "site", "publication.json", "corrections.json")
     git("commit", "-m", f"maj {time.strftime('%Y-%m-%d %H:%M')}")
     code, sortie = git("push")
 
