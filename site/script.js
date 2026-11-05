@@ -569,7 +569,7 @@ async function chargerListeJoueurs() {
       // peut rien telecharger. Autant ne proposer qu'eux.
       ANNUAIRE = INDEX_STATIQUE.joueurs;
       $("joueurs-connus").innerHTML = ANNUAIRE
-        .map((j) => `<option value="${j.nom}">#${j.rang} · ${j.pays}</option>`)
+        .map((j) => `<option value="${j.nom}">${j.rang ? "#" + j.rang : "—"} · ${j.pays}</option>`)
         .join("");
       $("f-joueur").placeholder = `Voir un autre joueur… (${ANNUAIRE.length} publiés)`;
       return;
@@ -588,7 +588,7 @@ async function chargerListeJoueurs() {
     const reste = ANNUAIRE.filter((j) => !dejaLa.has(j.slug));
 
     $("joueurs-connus").innerHTML = [...enTete, ...reste]
-      .map((j) => `<option value="${j.nom}">#${j.rang} · ${j.pays}` +
+      .map((j) => `<option value="${j.nom}">${j.rang ? "#" + j.rang : "—"} · ${j.pays}` +
                   `${dejaLa.has(j.slug) ? " · déjà chargé" : ""}</option>`)
       .join("");
 
@@ -656,10 +656,10 @@ $("f-joueur").addEventListener("change", (ev) => {
   if (v && ANNUAIRE.some((j) => j.nom === v)) changerJoueur(v);
 });
 
-window.addEventListener("popstate", () => {
-  SLUG = new URLSearchParams(location.search).get("joueur") || "ArthurFils";
-  demarrer();
-});
+// Le bouton « Retour » du navigateur est gere par router(), plus bas.
+// Un ancien gestionnaire rechargeait ici la fiche d'Arthur Fils a chaque
+// retour arriere : elle finissait de charger APRES l'accueil et
+// s'affichait sous la grille des joueurs.
 
 /* ------------------------------------------------------ mise a jour */
 
