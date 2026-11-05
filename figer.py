@@ -26,6 +26,9 @@ import tournois
 
 SORTIE = Path("site")
 
+# Extensions des fichiers du front a publier
+FRONT = {".html", ".css", ".js", ".svg", ".png", ".ico", ".webmanifest"}
+
 
 # Champs qui changent a chaque execution sans que la carriere ait
 # bouge : age du cache, date du releve de la Race. S'ils restaient dans
@@ -58,17 +61,18 @@ def figer_joueur(slug):
 
 def construire(slugs):
     if not slugs:
-        print("Aucun joueur en cache. Lance d'abord le serveur et "
-              "consulte au moins un joueur.")
+        print("Aucun joueur en cache. Essaie : python publier.py --top 50")
         return
 
     SORTIE.mkdir(exist_ok=True)
     dossier_donnees = SORTIE / "donnees"
     dossier_donnees.mkdir(exist_ok=True)
 
-    # 1. le front, avec un numero de version sur les fichiers lies
+    # 1. le front, avec un numero de version sur les fichiers lies.
+    #    Seuls les fichiers du site sont copies : une sauvegarde .bak ou
+    #    un script de test laisse dans frontend/ finirait sinon en ligne.
     for f in Path("frontend").iterdir():
-        if f.is_file():
+        if f.is_file() and f.suffix in FRONT:
             shutil.copy2(f, SORTIE / f.name)
 
     # Empreinte du CONTENU, pas de la date : elle ne change que si le
@@ -152,7 +156,7 @@ def construire(slugs):
     print(f"\n{len(index)} joueurs figes -- {total / 1024:.0f} Ko au total")
     print(f"""
 Site construit dans {SORTIE}/.
-Mise en ligne : GitHub Actions, chaque lundi ou a la demande.
+Mise en ligne : GitHub Actions, des que site/ est pousse.
 
 Pour verifier en local avant publication :
   cd {SORTIE} && python -m http.server 8080
