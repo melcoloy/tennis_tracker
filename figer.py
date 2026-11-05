@@ -120,7 +120,9 @@ def construire(slugs):
             "slug": slug,
             "nom": p["fullname"],
             "pays": p.get("country", ""),
-            "rang": p.get("currentrank"),
+            # None pour un joueur retire : Tennis Abstract laisse ""
+            # dans le champ, que l'accueil affichait tel quel (#"").
+            "rang": api._entier(p.get("currentrank")),
             "nb_matchs": p["nb_matchs"],
         })
         ko = chemin.stat().st_size / 1024
