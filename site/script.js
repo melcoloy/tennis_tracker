@@ -276,6 +276,7 @@ function dessinerFrise(matchs, profil) {
   });
 
   const infobulle = $("infobulle-frise");
+  const cibles = [];       // un point par tournoi, pour le toucher
 
   // Tous les matchs d'un tournoi portent la date d'ouverture du tournoi :
   // ils se superposent donc exactement au meme endroit. Survoler la pile
@@ -313,15 +314,53 @@ function dessinerFrise(matchs, profil) {
     }
 
     // zone de survol posee par-dessus toute la bande, a cet endroit
+    const cible = { px, py, liste };
+    cibles.push({ ...cible, palier });
     const zone = el("rect", {
       x: px - 3.5, y: py - 12, width: 7, height: H_BANDE - 4,
       fill: "transparent",
     }, svg);
     zone.style.cursor = "crosshair";
-    zone.addEventListener("mouseenter", () => {
-      infobulle.textContent = resumerTournoi(liste);
-    });
+    zone.addEventListener("mouseenter", () => montrer(cible));
   });
+
+  // Cadre autour du tournoi decrit, pour savoir de quel trait on parle.
+  const repere = el("rect", {
+    x: 0, y: 0, width: 9, height: H_BANDE - 4, rx: 2,
+    fill: "none", stroke: "var(--texte)", "stroke-width": 1.2, opacity: 0,
+  }, svg);
+  repere.style.pointerEvents = "none";
+
+  function montrer({ px, py, liste }) {
+    infobulle.textContent = resumerTournoi(liste);
+    repere.setAttribute("x", px - 4.5);
+    repere.setAttribute("y", py - 12);
+    repere.setAttribute("opacity", 0.8);
+  }
+
+  // Au doigt, il n'y a pas de survol, et un trait de 3 px est une cible
+  // impossible a viser. Un toucher (ou un clic) n'importe ou dans une
+  // bande choisit le tournoi le plus proche dans cette bande.
+  // onclick et non addEventListener : la frise est redessinee a chaque
+  // changement de joueur, les ecouteurs s'empileraient.
+  svg.onclick = (ev) => {
+    const boite = svg.getBoundingClientRect();
+    const vx = ((ev.clientX - boite.left) / boite.width) * largeur;
+    const vy = ((ev.clientY - boite.top) / boite.height) * hauteur;
+    const palier = Math.floor((vy - HAUT) / H_BANDE);
+
+    let choisi = null, ecart = 30;          // tolerance, en unites du dessin
+    cibles.forEach((c) => {
+      const d = Math.abs(c.px - vx);
+      if (c.palier === palier && d < ecart) { ecart = d; choisi = c; }
+    });
+    if (choisi) montrer(choisi);
+  };
+
+  // Sur petit ecran la frise defile en largeur (voir style.css) : on
+  // l'ouvre sur les saisons les plus recentes, les plus consultees.
+  const hote = svg.parentElement;
+  requestAnimationFrame(() => { hote.scrollLeft = hote.scrollWidth; });
   $("legende-surfaces").innerHTML = Object.entries(SURFACES)
     .map(([, s]) => `<span><i style="background:${s.couleur}"></i>${s.nom}</span>`)
     .join("") +
@@ -1076,16 +1115,37 @@ const NOM_TOUR_FR = {
 const ORDRE_TOURS = ["F", "BR", "SF", "QF", "R16", "R32", "R64", "R128", "RR",
                      "Q3", "Q2", "Q1"];
 
+/** Parametre de version : un fichier publie change de contenu, pas de nom. */
+function versionDonnees() {
+  return INDEX_STATIQUE && INDEX_STATIQUE.genere_le
+    ? `?v=${encodeURIComponent(INDEX_STATIQUE.genere_le)}` : "";
+}
+
+/**
+ * Les tournois SANS leurs matchs : de quoi dessiner les cartes de
+ * l'accueil et de la liste. Publie, c'est un petit fichier a part ;
+ * avec le serveur, l'API renvoie tout d'un coup.
+ */
 async function chargerTournois() {
   if (TOURNOIS) return TOURNOIS;
   const url = STATIQUE
-    ? `donnees/tournois.json${INDEX_STATIQUE && INDEX_STATIQUE.genere_le
-        ? `?v=${encodeURIComponent(INDEX_STATIQUE.genere_le)}` : ""}`
+    ? `donnees/tournois_resume.json${versionDonnees()}`
     : `${API}/api/tournois`;
   const r = await fetch(url);
   if (!r.ok) throw new Error(`tournois indisponibles (${r.status})`);
   TOURNOIS = (await r.json()).tournois || [];
   return TOURNOIS;
+}
+
+/** Un tournoi complet, avec ses matchs ; null s'il n'existe pas. */
+async function chargerTournoi(id) {
+  if (!STATIQUE) {
+    return (await chargerTournois()).find((x) => x.id === id) || null;
+  }
+  // l'identifiant finit dans une URL : on n'accepte que son format
+  if (!/^[a-z0-9-]+$/.test(id)) return null;
+  const r = await fetch(`donnees/tournois/${id}.json${versionDonnees()}`);
+  return r.ok ? r.json() : null;
 }
 
 const COURONNE =
@@ -1307,8 +1367,7 @@ async function afficherTournoi(id) {
   $("chargement").hidden = false;
   $("chargement").textContent = "Chargement du tournoi…";
 
-  const liste = await chargerTournois();
-  const t = liste.find((x) => x.id === id);
+  const t = await chargerTournoi(id);
 
   if (!t) {
     $("chargement").textContent =
