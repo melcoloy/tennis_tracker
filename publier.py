@@ -10,6 +10,11 @@ python figer.py, cd site, git add, git commit, git push.
     python publier.py --forcer        # retelecharge tout, sans attendre 24 h
     python publier.py CarlosAlcaraz JannikSinner
     python publier.py --top 100 --sans-push   # construit sans publier
+    python publier.py --top 50 --accepter     # publie meme si le site retrecit
+
+Avant de pousser, le site construit est compare a la derniere
+publication : s'il a nettement moins de joueurs, ou si beaucoup de
+fiches n'ont pas pu etre lues, rien n'est publie (voir verifier()).
 
 Les telechargements sont espaces d'une seconde : on tire des centaines
 de pages du site de quelqu'un d'autre, autant rester poli.
@@ -28,6 +33,13 @@ import figer
 PAUSE_INITIALE = 3.0    # secondes entre deux telechargements
 PAUSE_MAX = 25.0
 ESSAIS = 4              # tentatives par joueur avant d'abandonner
+
+# Garde-fou. La publication tourne seule (taches planifiees) : si
+# Tennis Abstract change le format de ses pages, ou bloque une partie
+# des telechargements, on ne doit pas remplacer le site en ligne par
+# une version a moitie vide.
+BAISSE_MAX = 0.10       # au-dela de 10 % de joueurs en moins : on bloque
+ECHECS_MAX = 0.10       # au-dela de 10 % de fiches illisibles : on bloque
 
 # --forcer : retelecharge tout, sans attendre les 24 h. Utile le
 # lendemain d'une finale, quand la copie locale date de la veille au
@@ -118,8 +130,15 @@ def telecharger(slugs):
                 pause = min(PAUSE_MAX, pause * 1.8)        # on ralentit
                 attente = max(e.secondes, pause)
                 if essai == ESSAIS:
-                    print(f"  [{i:>3}/{len(a_faire)}] {slug:<28} reporte "
-                          f"(limite de debit)")
+                    # Une copie un peu ancienne vaut mieux qu'un joueur
+                    # qui disparait du site jusqu'a la prochaine fois.
+                    if cache.chemin(slug).exists():
+                        print(f"  [{i:>3}/{len(a_faire)}] {slug:<28} reporte, "
+                              f"on garde la copie du disque")
+                        ok.append(slug)
+                    else:
+                        print(f"  [{i:>3}/{len(a_faire)}] {slug:<28} reporte "
+                              f"(limite de debit)")
                     abandons.append(slug)
                     break
                 print(f"  [{i:>3}/{len(a_faire)}] {slug:<28} 429, "
@@ -142,8 +161,46 @@ def telecharger(slugs):
 
 def git(*args):
     """Lance une commande git a la racine du projet."""
-    r = subprocess.run(["git", *args], capture_output=True, text=True)
+    r = subprocess.run(["git", *args], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
     return r.returncode, (r.stdout + r.stderr).strip()
+
+
+def joueurs_en_ligne():
+    """
+    Nombre de joueurs de la derniere publication, lu dans la version
+    COMMITEE d'index.json. Pas celle du disque : une construction ratee
+    et non publiee l'a peut-etre deja reecrite, et la comparaison
+    suivante passerait alors sans rien voir.
+    """
+    code, sortie = git("show", "HEAD:site/donnees/index.json")
+    if code != 0:
+        return None
+    try:
+        return len(json.loads(sortie)["joueurs"])
+    except (ValueError, KeyError):
+        return None
+
+
+def verifier(bilan, vises, avant):
+    """Liste des anomalies du site construit ; vide si tout va bien."""
+    problemes = []
+    n = bilan["publies"]
+
+    if n == 0:
+        problemes.append("aucun joueur dans le site construit")
+    elif avant and n < avant * (1 - BAISSE_MAX):
+        problemes.append(f"{n} joueurs, contre {avant} a la derniere publication")
+
+    echecs = len(bilan["ignores"])
+    if vises and echecs > vises * ECHECS_MAX:
+        problemes.append(f"{echecs} fiches sur {vises} n'ont pas pu etre lues "
+                         f"(format de Tennis Abstract modifie ?)")
+
+    if n and bilan["tournois"] == 0:
+        problemes.append("aucun tournoi reconstitue")
+
+    return problemes
 
 
 def pousser():
@@ -182,6 +239,9 @@ def main(args):
     global PAUSE_INITIALE
     sans_push = "--sans-push" in args
     args = [a for a in args if a != "--sans-push"]
+
+    accepter = "--accepter" in args
+    args = [a for a in args if a != "--accepter"]
 
     global FORCER
     if "--forcer" in args:
@@ -261,9 +321,22 @@ def main(args):
         print("Rien a faire. Essaie : python publier.py --top 50")
         return
 
+    avant = joueurs_en_ligne()
     disponibles = telecharger(uniques)
     print()
-    figer.construire(disponibles)
+    bilan = figer.construire(disponibles)
+
+    problemes = verifier(bilan, len(uniques), avant)
+    if problemes and not accepter:
+        print("\nPUBLICATION ANNULEE -- le site construit semble anormal :"
+              if not sans_push else "\nATTENTION -- le site construit semble anormal :")
+        for p in problemes:
+            print(f"  - {p}")
+        if not sans_push:
+            print("Le site en ligne n'a pas ete touche. Si c'est voulu "
+                  "(apres un --top plus petit, par exemple), relance avec --accepter.")
+            sys.exit(2)      # code d'erreur : la tache planifiee le signale
+        return
 
     if not sans_push:
         pousser()

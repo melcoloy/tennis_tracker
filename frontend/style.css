@@ -1084,3 +1084,19 @@ button.pr-ligne:hover { background: rgba(76, 155, 214, .12); color: var(--texte)
   #prc-arbre { gap: 16px; }
   #prc-arbre .tb-colonne { min-width: 200px; }
 }
+
+/* ------------------------------------------- frise : petits ecrans */
+
+/* Ramenee a 390 px de large, la frise devenait illisible : traits de
+   1 px, libelles minuscules. Sous 780 px, elle garde une largeur
+   lisible et defile horizontalement ; script.js l'ouvre sur les
+   saisons recentes. */
+@media (max-width: 780px) {
+  .bloc--frise .svg-hote {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+  }
+  .bloc--frise .svg-hote svg { width: 820px; max-width: none; }
+}
+

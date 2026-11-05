@@ -61,7 +61,15 @@ python publier.py --legendes         # inclure les légendes retraitées
 python publier.py CarlosAlcaraz      # ajouter un joueur précis
 python publier.py --forcer           # tout retélécharger, sans attendre 24 h
 python publier.py --sans-push        # construire sans publier
+python publier.py --top 50 --accepter   # publier un site volontairement plus petit
 ```
+
+Avant de pousser, `publier.py` compare le site construit à la dernière
+publication. S'il compte plus de 10 % de joueurs en moins, ou si plus de
+10 % des fiches n'ont pas pu être lues (format de Tennis Abstract
+modifié, téléchargements bloqués…), rien n'est publié et la commande
+s'arrête avec une erreur. `--accepter` passe outre quand la baisse est
+voulue.
 
 **Vérifier en local avant de publier** :
 
@@ -100,6 +108,9 @@ Deux tâches du Planificateur de tâches :
 
 Les journaux vont dans `logs/`. Les tâches tournent sur le PC : s'il est
 éteint à l'heure prévue, elles se lancent à l'allumage suivant.
+Si le garde-fou annule une publication, `TennisTracker` se termine avec
+le code 2 : `Get-ScheduledTaskInfo TennisTracker` l'affiche dans
+`LastTaskResult`, et le journal en donne la raison.
 
 ## Fichiers
 

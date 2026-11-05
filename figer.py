@@ -60,9 +60,14 @@ def figer_joueur(slug):
 
 
 def construire(slugs):
+    """
+    Construit site/ et renvoie un bilan, que publier.py examine avant
+    de pousser : {"publies": n, "ignores": [slugs], "tournois": n}.
+    """
+    bilan = {"publies": 0, "ignores": [], "tournois": 0}
     if not slugs:
         print("Aucun joueur en cache. Essaie : python publier.py --top 50")
-        return
+        return bilan
 
     SORTIE.mkdir(exist_ok=True)
     dossier_donnees = SORTIE / "donnees"
@@ -105,6 +110,7 @@ def construire(slugs):
             data = figer_joueur(slug)
         except Exception as e:
             print(f"  [!] {slug} ignore : {type(e).__name__} -- {e}")
+            bilan["ignores"].append(slug)
             continue
 
         volatils = data.pop("_volatils", {})
@@ -130,15 +136,32 @@ def construire(slugs):
 
     if not index:
         print("Rien a publier.")
-        return
+        return bilan
 
     # 3. les tournois, reconstitues en croisant les carrieres
+    #    Un resume leger pour l'accueil et la liste, et un fichier par
+    #    tournoi pour son tableau. L'accueil chargeait auparavant les 60
+    #    tableaux complets (650 Ko) pour n'afficher que six cartes.
     liste_t = tournois.construire(pour_tournois, cache.slugifier)
-    (dossier_donnees / "tournois.json").write_text(
-        json.dumps({"tournois": liste_t}, ensure_ascii=False),
+
+    resume = [{k: v for k, v in t.items() if k != "matchs"} for t in liste_t]
+    (dossier_donnees / "tournois_resume.json").write_text(
+        json.dumps({"tournois": resume}, ensure_ascii=False),
         encoding="utf-8")
-    ko = (dossier_donnees / "tournois.json").stat().st_size / 1024
-    print(f"\n{len(liste_t)} tournois reconstitues   {ko:.0f} Ko")
+
+    dossier_t = dossier_donnees / "tournois"
+    dossier_t.mkdir(exist_ok=True)
+    for ancien in dossier_t.glob("*.json"):     # tournois sortis du top 60
+        ancien.unlink()
+    for t in liste_t:
+        (dossier_t / f"{t['id']}.json").write_text(
+            json.dumps(t, ensure_ascii=False), encoding="utf-8")
+
+    (dossier_donnees / "tournois.json").unlink(missing_ok=True)  # ancien format
+
+    ko = (dossier_donnees / "tournois_resume.json").stat().st_size / 1024
+    print(f"\n{len(liste_t)} tournois reconstitues   resume : {ko:.0f} Ko")
+    bilan["tournois"] = len(liste_t)
 
     # 4. l'index : c'est sa presence qui fait basculer le front en
     #    mode statique. Pas de detection d'hote, pas de configuration.
@@ -156,6 +179,7 @@ def construire(slugs):
 
     total = sum(f.stat().st_size for f in SORTIE.rglob("*") if f.is_file())
     print(f"\n{len(index)} joueurs figes -- {total / 1024:.0f} Ko au total")
+    bilan["publies"] = len(index)
     print(f"""
 Site construit dans {SORTIE}/.
 Mise en ligne : GitHub Actions, des que site/ est pousse.
@@ -163,6 +187,7 @@ Mise en ligne : GitHub Actions, des que site/ est pousse.
 Pour verifier en local avant publication :
   cd {SORTIE} && python -m http.server 8080
 """)
+    return bilan
 
 
 if __name__ == "__main__":
