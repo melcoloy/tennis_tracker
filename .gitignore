@@ -13,11 +13,15 @@ donnees.json
 # site/ EST versionne : Tennis Abstract bloque les serveurs de GitHub,
 # le site est donc construit en local puis pousse. L'Action le deploie.
 
-# divers
-.DS_Store
-*.tmp
 # journaux des mises a jour automatiques
 logs/
 
-# journaux des mises a jour automatiques
-logs/
+# reglages personnels de l'editeur
+.vscode/
+
+# sauvegardes : git garde deja l'historique
+*.bak
+
+# divers
+.DS_Store
+*.tmp
