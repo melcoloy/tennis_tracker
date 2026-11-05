@@ -84,7 +84,17 @@ def _entier(v):
         return None
 
 
+def _joue(m):
+    """
+    Match deja joue. Tennis Abstract liste aussi le prochain match d'un
+    joueur encore en lice ('U', score vide) : il ne compte ni comme
+    victoire ni comme defaite.
+    """
+    return m.get("wl") in ("W", "L")
+
+
 def _bilan(matchs):
+    matchs = [m for m in matchs if _joue(m)]
     v = sum(1 for m in matchs if m.get("wl") == "W")
     n = len(matchs)
     return {"joues": n, "gagnes": v, "perdus": n - v,
@@ -117,9 +127,9 @@ def profil(joueur: str = Query(JOUEUR_DEFAUT)):
     d = donnees(joueur)
     p = dict(d["profil"])
     p["slug"] = joueur
-    p["nb_matchs"] = len(d["matchs"])
     p["victoires"] = sum(1 for m in d["matchs"] if m.get("wl") == "W")
     p["defaites"] = sum(1 for m in d["matchs"] if m.get("wl") == "L")
+    p["nb_matchs"] = p["victoires"] + p["defaites"]      # matchs joues
     p["peakfirst_fr"] = _fr(p.get("peakfirst") or "")
     p["actif"] = _entier(p.get("currentrank")) is not None
     p["cache_age_heures"] = round((cache.age_secondes(joueur) or 0) / 3600, 1)

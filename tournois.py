@@ -77,6 +77,12 @@ def construire(joueurs, slugifier, limite=60):
             if not adversaire:
                 continue
 
+            # Tennis Abstract liste aussi le prochain match d'un joueur
+            # encore en lice, avec le resultat 'U' et un score vide.
+            # Traite comme une defaite, il designait un faux vainqueur.
+            if m.get("resultat") not in ("W", "L"):
+                continue
+
             gagne = m.get("resultat") == "W"
             vainqueur, perdu = (nom, adversaire) if gagne else (adversaire, nom)
             score = m["score"] if gagne else inverser_score(m["score"])

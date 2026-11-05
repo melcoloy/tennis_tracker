@@ -288,6 +288,8 @@ button:focus-visible { outline: 2px solid var(--dur); outline-offset: 2px; }
 
 .pastille--w { background: rgba(111,168,79,.18); color: var(--gazon); }
 .pastille--l { background: rgba(126,135,155,.14); color: var(--sourdine); }
+/* match annonce, pas encore joue */
+.pastille--u { background: none; border: 1px dashed var(--trait); color: var(--sourdine); }
 
 /* ----------------------------------------------------------------- pied */
 

@@ -201,14 +201,18 @@ const NOM_TOUR = {
 /** Une phrase decrivant le parcours dans un tournoi. */
 function resumerTournoi(liste) {
   const v = liste.filter((m) => m.resultat === "W").length;
-  const d = liste.length - v;
+  const d = liste.filter((m) => m.resultat === "L").length;
 
   // le match le plus avance, pas le premier de la liste
   const dernier = liste.reduce((a, b) =>
     (TOURS[b.tour] ?? -1) > (TOURS[a.tour] ?? -1) ? b : a);
 
   let issue;
-  if (dernier.tour === "F" && dernier.resultat === "W") {
+  if (dernier.resultat === "U") {
+    // tournoi en cours : Tennis Abstract annonce deja le prochain match
+    issue = `en cours — ${NOM_TOUR[dernier.tour] || dernier.tour} ` +
+            `à venir contre ${dernier.adversaire}`;
+  } else if (dernier.tour === "F" && dernier.resultat === "W") {
     issue = `TITRE — victoire en finale contre ${dernier.adversaire} (${dernier.score})`;
   } else if (dernier.tour === "F") {
     issue = `finaliste — battu par ${dernier.adversaire} (${dernier.score})`;
@@ -291,6 +295,7 @@ function dessinerFrise(matchs, profil) {
     const py = HAUT + palier * H_BANDE + 9;
 
     liste.forEach((m) => {
+      if (m.resultat === "U") return;          // pas encore joue
       el("rect", {
         x: px - 1.4, y: py, width: 2.8, height: H_BANDE - 20,
         fill: couleurSurface(m.surface),
@@ -488,8 +493,10 @@ function appliquerFiltres() {
   );
 
   const v = filtres.filter((m) => m.resultat === "W").length;
+  const d = filtres.filter((m) => m.resultat === "L").length;
+  const aVenir = filtres.length - v - d;
   $("compte-matchs").textContent = filtres.length
-    ? `${filtres.length} matchs · ${v} v. ${filtres.length - v} d.`
+    ? `${v + d} matchs · ${v} v. ${d} d.` + (aVenir ? ` · ${aVenir} à venir` : "")
     : "aucun match ne correspond";
 
   $("corps-matchs").innerHTML = filtres.map((m) => `
@@ -498,7 +505,7 @@ function appliquerFiltres() {
       <td class="large">${m.tournoi}</td>
       <td style="color:var(--sourdine)">${m.niveau}</td>
       <td style="color:var(--sourdine)">${m.tour}</td>
-      <td><span class="pastille pastille--${m.resultat.toLowerCase()}">${m.resultat === "W" ? "V" : "D"}</span></td>
+      <td><span class="pastille pastille--${m.resultat.toLowerCase()}">${{ W: "V", L: "D" }[m.resultat] || "…"}</span></td>
       <td class="large">${m.adversaire}${m.rang_adversaire ? ` <span style="color:var(--sourdine)">#${m.rang_adversaire}</span>` : ""}</td>
       <td class="m-score">${m.score}</td>
     </tr>`).join("");
