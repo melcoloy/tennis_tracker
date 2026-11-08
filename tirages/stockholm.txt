@@ -1,0 +1,37 @@
+# Source: auto
+# Nom: Stockholm
+# Date: 20261102
+# Surface: 
+# Niveau: 
+Taylor Fritz (1)
+Bye
+James Duckworth
+Cameron Norrie
+Arthur Rinderknech
+Miomir Kecmanovic
+Holger Rune
+Zizou Bergs (8)
+Lorenzo Musetti (3)
+Bye
+Leo Borg (WC)
+Qualifier1
+Tomas Machac
+Qualifier2
+Adolfo Daniel Vallejo
+Ugo Humbert (7)
+Alex Michelsen (6)
+Yannick Hanfmann
+Elias Ymer (WC)
+Juan Manuel Cerundolo
+Qualifier3
+Quentin Halys
+Bye
+Alejandro Tabilo (4)
+Tomas Martin Etcheverry (5)
+Max Dahlin (WC)
+Thiago Agustin Tirante
+Jaume Munar
+Luca Van Assche
+Qualifier4
+Bye
+Casper Ruud (2)
