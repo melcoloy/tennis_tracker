@@ -1,8 +1,8 @@
 # Source: auto
 # Nom: Stockholm
 # Date: 20261102
-# Surface: 
-# Niveau: 
+# Surface: Hard
+# Niveau: ATP 250/500
 Taylor Fritz (1)
 Bye
 James Duckworth
