@@ -38,7 +38,8 @@ Ecrit site/donnees/prochain.json, lu par la page « Pronostics ».
 import json
 import re
 import sys
-from datetime import date, timedelta
+import unicodedata
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import cache
@@ -53,7 +54,17 @@ SORTIE = Path("site") / "donnees" / "prochain.json"
 MARQUE = re.compile(r"\s*\((\d{1,3}|Q|WC|LL|PR|SE|ALT)\)\s*$", re.I)
 
 # Au-dela, un tournoi est fini : il quitte la page Pronostics.
+# C'est un filet de securite : en temps normal, un tournoi part des que
+# sa finale apparait dans les tournois reconstitues (voir termines()).
 JOURS_MAX = 10
+
+# Tournois reconstitues lors de la derniere publication, avec leur
+# vainqueur une fois la finale jouee.
+RESUME = Path("site/donnees/tournois_resume.json")
+
+# Ecart toléré entre la date d'un tirage et celle du tournoi reconstitue :
+# un tirage recupere le dimanche porte parfois le lundi precedent.
+ECART_JOURS = 14
 
 # Place vide en face d'une tete de serie exemptee du premier tour.
 BYE = "Bye"
@@ -156,6 +167,42 @@ def sources():
     return trouves
 
 
+def cle_nom(nom):
+    """'ATP Paris' et 'Paris' -> 'paris' ; 'Los Cabos' -> 'loscabos'."""
+    s = unicodedata.normalize("NFKD", nom).encode("ascii", "ignore").decode()
+    s = "".join(c for c in s.lower() if c.isalnum())
+    return s.removeprefix("atp")
+
+
+def termines():
+    """[(cle, date)] des tournois reconstitues dont on connait le vainqueur."""
+    if not RESUME.exists():
+        return []
+    try:
+        liste = json.loads(RESUME.read_text(encoding="utf-8"))["tournois"]
+    except (ValueError, KeyError):
+        return []
+    return [(cle_nom(t["nom"]), t["date"]) for t in liste
+            if t.get("vainqueur") and t.get("date")]
+
+
+def est_termine(t, finis):
+    """
+    Vrai si la finale de ce tournoi est deja jouee : meme ville
+    (« Paris » dans « Paris Masters »), a quelques jours pres.
+    """
+    cle = cle_nom(t["nom"])
+    if not cle or not t["date"]:
+        return False
+    d = datetime.strptime(t["date"], "%Y%m%d")
+    for nom, date_fin in finis:
+        if cle in nom or nom in cle:
+            ecart = abs((datetime.strptime(date_fin, "%Y%m%d") - d).days)
+            if ecart <= ECART_JOURS:
+                return True
+    return False
+
+
 def construire():
     connus = {s.lower() for s in cache.joueurs_en_cache()}
 
@@ -177,10 +224,16 @@ def construire():
     # Les tournois finis disparaissent. On ecrit quand meme le fichier,
     # meme vide : sinon l'ancien prochain.json resterait publie.
     limite = (date.today() - timedelta(days=JOURS_MAX)).strftime("%Y%m%d")
-    finis = [t["nom"] for t in tournois if t["date"] and t["date"] < limite]
-    if finis:
-        print(f"\n  termines, ignores : {', '.join(finis)}")
-    tournois = [t for t in tournois if not t["date"] or t["date"] >= limite]
+    finales = termines()
+    garder = []
+    for t in tournois:
+        if est_termine(t, finales):
+            print(f"  {t['nom']:<16} termine (finale jouee), retire")
+        elif t["date"] and t["date"] < limite:
+            print(f"  {t['nom']:<16} commence il y a plus de {JOURS_MAX} jours, retire")
+        else:
+            garder.append(t)
+    tournois = garder
 
     tournois.sort(key=lambda t: t["date"])
 
