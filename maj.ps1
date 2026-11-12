@@ -1,5 +1,6 @@
 # maj.ps1 -- lance la publication et garde une trace de chaque passage
 Set-Location $PSScriptRoot
+git pull --ff-only
 New-Item -ItemType Directory -Force logs | Out-Null
 $env:PYTHONIOENCODING = "utf-8"
 $log = "logs\maj_$(Get-Date -Format 'yyyy-MM-dd_HH-mm').txt"
