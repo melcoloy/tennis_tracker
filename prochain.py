@@ -53,10 +53,13 @@ SORTIE = Path("site") / "donnees" / "prochain.json"
 # publies : « Alexander Zverev (1) », « Grigor Dimitrov (Q) ».
 MARQUE = re.compile(r"\s*\((\d{1,3}|Q|WC|LL|PR|SE|ALT)\)\s*$", re.I)
 
-# Au-dela, un tournoi est fini : il quitte la page Pronostics.
-# C'est un filet de securite : en temps normal, un tournoi part des que
-# sa finale apparait dans les tournois reconstitues (voir termines()).
-JOURS_MAX = 10
+# Filet de securite : en temps normal, un tournoi quitte la page
+# Pronostics des que sa finale apparait dans les tournois reconstitues
+# (voir termines()). Ce delai ne sert que si elle n'y apparait jamais.
+# Il doit couvrir les tournois de deux semaines (Grand Chelem, Indian
+# Wells, Miami, Madrid, Rome, Shanghai) : a 10 jours, un Grand Chelem
+# disparaissait avant ses demi-finales.
+JOURS_MAX = 21
 
 # Tournois reconstitues lors de la derniere publication, avec leur
 # vainqueur une fois la finale jouee.
