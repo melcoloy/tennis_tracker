@@ -13,5 +13,5 @@ git add site/donnees/prochain.json tirages
 git diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
     git commit -m "tirages $(Get-Date -Format 'yyyy-MM-dd HH:mm')" *>&1 | Tee-Object -FilePath $log -Append
-    git push *>&1 | Tee-Object -FilePath $log -Append
+    git push --quiet *>&1 | Tee-Object -FilePath $log -Append
 }
