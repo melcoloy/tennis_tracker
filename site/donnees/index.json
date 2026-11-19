@@ -1,12 +1,12 @@
 {
-  "genere_le": "2026-11-12 11:00",
-  "race_releve_le": "12/11/2026",
+  "genere_le": "2026-11-19 09:28",
+  "race_releve_le": "19/11/2026",
   "joueurs": [
     {
       "slug": "AdamWalton",
       "nom": "Adam Walton",
       "pays": "AUS",
-      "rang": 96,
+      "rang": 97,
       "nb_matchs": 382
     },
     {
@@ -27,7 +27,7 @@
       "slug": "AlejandroDavidovichFokina",
       "nom": "Alejandro Davidovich Fokina",
       "pays": "ESP",
-      "rang": 17,
+      "rang": 16,
       "nb_matchs": 568
     },
     {
@@ -35,7 +35,7 @@
       "nom": "Alejandro Tabilo",
       "pays": "CHI",
       "rang": 31,
-      "nb_matchs": 652
+      "nb_matchs": 655
     },
     {
       "slug": "AleksandarKovacevic",
@@ -48,21 +48,21 @@
       "slug": "AleksandarVukic",
       "nom": "Aleksandar Vukic",
       "pays": "AUS",
-      "rang": 137,
+      "rang": 138,
       "nb_matchs": 618
     },
     {
       "slug": "AlexBolt",
       "nom": "Alex Bolt",
       "pays": "AUS",
-      "rang": 171,
-      "nb_matchs": 771
+      "rang": 209,
+      "nb_matchs": 773
     },
     {
       "slug": "AlexDeMinaur",
       "nom": "Alex De Minaur",
       "pays": "AUS",
-      "rang": 9,
+      "rang": 11,
       "nb_matchs": 713
     },
     {
@@ -70,13 +70,13 @@
       "nom": "Alex Michelsen",
       "pays": "USA",
       "rang": 35,
-      "nb_matchs": 322
+      "nb_matchs": 323
     },
     {
       "slug": "AlexMolcan",
       "nom": "Alex Molcan",
       "pays": "SVK",
-      "rang": 72,
+      "rang": 73,
       "nb_matchs": 551
     },
     {
@@ -90,43 +90,43 @@
       "slug": "AlexanderBublik",
       "nom": "Alexander Bublik",
       "pays": "KAZ",
-      "rang": 26,
+      "rang": 25,
       "nb_matchs": 716
     },
     {
       "slug": "AlexanderShevchenko",
       "nom": "Alexander Shevchenko",
       "pays": "KAZ",
-      "rang": 107,
-      "nb_matchs": 516
+      "rang": 100,
+      "nb_matchs": 518
     },
     {
       "slug": "AlexanderZverev",
       "nom": "Alexander Zverev",
       "pays": "GER",
       "rang": 1,
-      "nb_matchs": 940
+      "nb_matchs": 942
     },
     {
       "slug": "AlexandreMuller",
       "nom": "Alexandre Muller",
       "pays": "FRA",
-      "rang": 153,
-      "nb_matchs": 777
+      "rang": 154,
+      "nb_matchs": 778
     },
     {
       "slug": "AlexeiPopyrin",
       "nom": "Alexei Popyrin",
       "pays": "AUS",
-      "rang": 125,
+      "rang": 129,
       "nb_matchs": 536
     },
     {
       "slug": "AlexisGalarneau",
       "nom": "Alexis Galarneau",
       "pays": "CAN",
-      "rang": 192,
-      "nb_matchs": 433
+      "rang": 190,
+      "nb_matchs": 434
     },
     {
       "slug": "AndreAgassi",
@@ -147,13 +147,13 @@
       "nom": "Andrea Guerrieri",
       "pays": "ITA",
       "rang": 160,
-      "nb_matchs": 426
+      "nb_matchs": 428
     },
     {
       "slug": "AndreaPellegrino",
       "nom": "Andrea Pellegrino",
       "pays": "ITA",
-      "rang": 141,
+      "rang": 142,
       "nb_matchs": 633
     },
     {
@@ -181,14 +181,14 @@
       "slug": "ArthurCazaux",
       "nom": "Arthur Cazaux",
       "pays": "FRA",
-      "rang": 676,
+      "rang": 678,
       "nb_matchs": 334
     },
     {
       "slug": "ArthurFery",
       "nom": "Arthur Fery",
       "pays": "GBR",
-      "rang": 33,
+      "rang": 32,
       "nb_matchs": 273
     },
     {
@@ -196,13 +196,13 @@
       "nom": "Arthur Fils",
       "pays": "FRA",
       "rang": 7,
-      "nb_matchs": 351
+      "nb_matchs": 353
     },
     {
       "slug": "ArthurGea",
       "nom": "Arthur Gea",
       "pays": "FRA",
-      "rang": 47,
+      "rang": 48,
       "nb_matchs": 273
     },
     {
@@ -217,28 +217,28 @@
       "nom": "Ben Shelton",
       "pays": "USA",
       "rang": 4,
-      "nb_matchs": 324
+      "nb_matchs": 326
     },
     {
       "slug": "BenjaminBonzi",
       "nom": "Benjamin Bonzi",
       "pays": "FRA",
       "rang": 91,
-      "nb_matchs": 802
+      "nb_matchs": 804
     },
     {
       "slug": "BernardTomic",
       "nom": "Bernard Tomic",
       "pays": "AUS",
-      "rang": 176,
-      "nb_matchs": 893
+      "rang": 174,
+      "nb_matchs": 894
     },
     {
       "slug": "BillyHarris",
       "nom": "Billy Harris",
       "pays": "GBR",
-      "rang": 227,
-      "nb_matchs": 636
+      "rang": 171,
+      "nb_matchs": 640
     },
     {
       "slug": "BjornBorg",
@@ -258,8 +258,8 @@
       "slug": "BornaGojo",
       "nom": "Borna Gojo",
       "pays": "CRO",
-      "rang": 134,
-      "nb_matchs": 477
+      "rang": 127,
+      "nb_matchs": 479
     },
     {
       "slug": "BoticVanDeZandschulp",
@@ -279,15 +279,15 @@
       "slug": "BuYunchaokete",
       "nom": "Bu Yunchaokete",
       "pays": "CHN",
-      "rang": 92,
+      "rang": 93,
       "nb_matchs": 336
     },
     {
       "slug": "CameronNorrie",
       "nom": "Cameron Norrie",
       "pays": "GBR",
-      "rang": 53,
-      "nb_matchs": 681
+      "rang": 52,
+      "nb_matchs": 682
     },
     {
       "slug": "CamiloUgoCarabelli",
@@ -301,7 +301,7 @@
       "nom": "Carlos Alcaraz",
       "pays": "ESP",
       "rang": 3,
-      "nb_matchs": 487
+      "nb_matchs": 489
     },
     {
       "slug": "CarlosMoya",
@@ -314,43 +314,43 @@
       "slug": "CarlosTaberner",
       "nom": "Carlos Taberner",
       "pays": "ESP",
-      "rang": 456,
-      "nb_matchs": 734
+      "rang": 502,
+      "nb_matchs": 737
     },
     {
       "slug": "CasperRuud",
       "nom": "Casper Ruud",
       "pays": "NOR",
       "rang": 18,
-      "nb_matchs": 722
+      "nb_matchs": 723
     },
     {
       "slug": "ChrisRodesch",
       "nom": "Chris Rodesch",
       "pays": "LUX",
-      "rang": 181,
+      "rang": 180,
       "nb_matchs": 204
     },
     {
       "slug": "ChristopherOconnell",
       "nom": "Christopher Oconnell",
       "pays": "AUS",
-      "rang": 117,
-      "nb_matchs": 709
+      "rang": 118,
+      "nb_matchs": 710
     },
     {
       "slug": "ClementChidekh",
       "nom": "Clement Chidekh",
       "pays": "FRA",
-      "rang": 129,
-      "nb_matchs": 343
+      "rang": 116,
+      "nb_matchs": 347
     },
     {
       "slug": "ClementTabur",
       "nom": "Clement Tabur",
       "pays": "FRA",
-      "rang": 186,
-      "nb_matchs": 505
+      "rang": 183,
+      "nb_matchs": 508
     },
     {
       "slug": "ColemanWong",
@@ -363,22 +363,22 @@
       "slug": "CorentinMoutet",
       "nom": "Corentin Moutet",
       "pays": "FRA",
-      "rang": 108,
+      "rang": 109,
       "nb_matchs": 606
     },
     {
       "slug": "CristianGarin",
       "nom": "Cristian Garin",
       "pays": "CHI",
-      "rang": 174,
+      "rang": 249,
       "nb_matchs": 749
     },
     {
       "slug": "DaliborSvrcina",
       "nom": "Dalibor Svrcina",
       "pays": "CZE",
-      "rang": 112,
-      "nb_matchs": 417
+      "rang": 113,
+      "nb_matchs": 419
     },
     {
       "slug": "DamirDzumhur",
@@ -391,15 +391,15 @@
       "slug": "DaneSweeny",
       "nom": "Dane Sweeny",
       "pays": "AUS",
-      "rang": 116,
-      "nb_matchs": 422
+      "rang": 122,
+      "nb_matchs": 425
     },
     {
       "slug": "DanielAltmaier",
       "nom": "Daniel Altmaier",
       "pays": "GER",
-      "rang": 73,
-      "nb_matchs": 731
+      "rang": 72,
+      "nb_matchs": 734
     },
     {
       "slug": "DanielMeridaAguilar",
@@ -412,22 +412,22 @@
       "slug": "DaniilGlinka",
       "nom": "Daniil Glinka",
       "pays": "EST",
-      "rang": 163,
-      "nb_matchs": 391
+      "rang": 205,
+      "nb_matchs": 392
     },
     {
       "slug": "DaniilMedvedev",
       "nom": "Daniil Medvedev",
       "pays": "RUS",
       "rang": 5,
-      "nb_matchs": 881
+      "nb_matchs": 883
     },
     {
       "slug": "DarwinBlanch",
       "nom": "Darwin Blanch",
       "pays": "USA",
-      "rang": 149,
-      "nb_matchs": 177
+      "rang": 151,
+      "nb_matchs": 178
     },
     {
       "slug": "DavidFerrer",
@@ -440,14 +440,14 @@
       "slug": "DavidJordaSanchis",
       "nom": "David Jorda Sanchis",
       "pays": "ESP",
-      "rang": 195,
-      "nb_matchs": 476
+      "rang": 192,
+      "nb_matchs": 477
     },
     {
       "slug": "DenisShapovalov",
       "nom": "Denis Shapovalov",
       "pays": "CAN",
-      "rang": 50,
+      "rang": 51,
       "nb_matchs": 588
     },
     {
@@ -455,14 +455,14 @@
       "nom": "Diego Dedura Palomero",
       "pays": "GER",
       "rang": 185,
-      "nb_matchs": 188
+      "nb_matchs": 189
     },
     {
       "slug": "DinoPrizmic",
       "nom": "Dino Prizmic",
       "pays": "CRO",
       "rang": 89,
-      "nb_matchs": 250
+      "nb_matchs": 252
     },
     {
       "slug": "DominicThiem",
@@ -475,49 +475,49 @@
       "slug": "DusanLajovic",
       "nom": "Dusan Lajovic",
       "pays": "SRB",
-      "rang": 158,
-      "nb_matchs": 1065
+      "rang": 159,
+      "nb_matchs": 1066
     },
     {
       "slug": "DylanDietrich",
       "nom": "Dylan Dietrich",
       "pays": "SUI",
-      "rang": 187,
-      "nb_matchs": 88
+      "rang": 186,
+      "nb_matchs": 89
     },
     {
       "slug": "EdasButvilas",
       "nom": "Edas Butvilas",
       "pays": "LTU",
-      "rang": 213,
-      "nb_matchs": 278
+      "rang": 210,
+      "nb_matchs": 279
     },
     {
       "slug": "EliasYmer",
       "nom": "Elias Ymer",
       "pays": "SWE",
-      "rang": 254,
-      "nb_matchs": 813
+      "rang": 305,
+      "nb_matchs": 814
     },
     {
       "slug": "EliotSpizzirri",
       "nom": "Eliot Spizzirri",
       "pays": "USA",
-      "rang": 248,
+      "rang": 251,
       "nb_matchs": 197
     },
     {
       "slug": "ElmerMoller",
       "nom": "Elmer Moller",
       "pays": "DEN",
-      "rang": 148,
-      "nb_matchs": 316
+      "rang": 149,
+      "nb_matchs": 317
     },
     {
       "slug": "EmilioNava",
       "nom": "Emilio Nava",
       "pays": "USA",
-      "rang": 121,
+      "rang": 126,
       "nb_matchs": 434
     },
     {
@@ -545,14 +545,14 @@
       "slug": "FacundoMena",
       "nom": "Facundo Mena",
       "pays": "ARG",
-      "rang": 193,
+      "rang": 199,
       "nb_matchs": 929
     },
     {
       "slug": "FedericoAgustinGomez",
       "nom": "Federico Agustin Gomez",
       "pays": "ARG",
-      "rang": 209,
+      "rang": 207,
       "nb_matchs": 337
     },
     {
@@ -566,50 +566,50 @@
       "slug": "FelixAugerAliassime",
       "nom": "Felix Auger Aliassime",
       "pays": "CAN",
-      "rang": 14,
+      "rang": 17,
       "nb_matchs": 663
     },
     {
       "slug": "FelixBalshaw",
       "nom": "Felix Balshaw",
       "pays": "FRA",
-      "rang": 175,
+      "rang": 173,
       "nb_matchs": 133
     },
     {
       "slug": "FilipMisolic",
       "nom": "Filip Misolic",
       "pays": "AUT",
-      "rang": 593,
-      "nb_matchs": 338
+      "rang": 548,
+      "nb_matchs": 339
     },
     {
       "slug": "FlavioCobolli",
       "nom": "Flavio Cobolli",
       "pays": "ITA",
       "rang": 6,
-      "nb_matchs": 450
+      "nb_matchs": 452
     },
     {
       "slug": "FrancesTiafoe",
       "nom": "Frances Tiafoe",
       "pays": "USA",
       "rang": 8,
-      "nb_matchs": 721
+      "nb_matchs": 723
     },
     {
       "slug": "FrancescoMaestrelli",
       "nom": "Francesco Maestrelli",
       "pays": "ITA",
-      "rang": 168,
-      "nb_matchs": 371
+      "rang": 162,
+      "nb_matchs": 373
     },
     {
       "slug": "FrancescoPassaro",
       "nom": "Francesco Passaro",
       "pays": "ITA",
-      "rang": 157,
-      "nb_matchs": 388
+      "rang": 158,
+      "nb_matchs": 390
     },
     {
       "slug": "FranciscoCerundolo",
@@ -622,8 +622,8 @@
       "slug": "FranciscoComesana",
       "nom": "Francisco Comesana",
       "pays": "ARG",
-      "rang": 138,
-      "nb_matchs": 444
+      "rang": 136,
+      "nb_matchs": 446
     },
     {
       "slug": "GabrielDiallo",
@@ -650,8 +650,8 @@
       "slug": "GianlucaCadenasso",
       "nom": "Gianluca Cadenasso",
       "pays": "ITA",
-      "rang": 214,
-      "nb_matchs": 183
+      "rang": 215,
+      "nb_matchs": 184
     },
     {
       "slug": "GiovanniMpetshiPerricard",
@@ -665,7 +665,7 @@
       "nom": "Gonzalo Bueno",
       "pays": "PER",
       "rang": 184,
-      "nb_matchs": 326
+      "nb_matchs": 328
     },
     {
       "slug": "GoranIvanisevic",
@@ -685,14 +685,14 @@
       "slug": "GuidoIvanJusto",
       "nom": "Guido Ivan Justo",
       "pays": "ARG",
-      "rang": 183,
-      "nb_matchs": 365
+      "rang": 182,
+      "nb_matchs": 366
     },
     {
       "slug": "GustavoHeide",
       "nom": "Gustavo Heide",
       "pays": "BRA",
-      "rang": 113,
+      "rang": 119,
       "nb_matchs": 319
     },
     {
@@ -706,36 +706,36 @@
       "slug": "HamadMedjedovic",
       "nom": "Hamad Medjedovic",
       "pays": "SRB",
-      "rang": 80,
+      "rang": 79,
       "nb_matchs": 315
     },
     {
       "slug": "HaroldMayot",
       "nom": "Harold Mayot",
       "pays": "FRA",
-      "rang": 210,
-      "nb_matchs": 417
+      "rang": 208,
+      "nb_matchs": 418
     },
     {
       "slug": "HarryWendelken",
       "nom": "Harry Wendelken",
       "pays": "GBR",
-      "rang": 236,
-      "nb_matchs": 321
+      "rang": 239,
+      "nb_matchs": 322
     },
     {
       "slug": "HenriqueRocha",
       "nom": "Henrique Rocha",
       "pays": "POR",
-      "rang": 111,
-      "nb_matchs": 320
+      "rang": 115,
+      "nb_matchs": 321
     },
     {
       "slug": "HolgerRune",
       "nom": "Holger Rune",
       "pays": "DEN",
-      "rang": 406,
-      "nb_matchs": 444
+      "rang": 315,
+      "nb_matchs": 446
     },
     {
       "slug": "HubertHurkacz",
@@ -748,21 +748,21 @@
       "slug": "HugoDellien",
       "nom": "Hugo Dellien",
       "pays": "BOL",
-      "rang": 106,
-      "nb_matchs": 903
+      "rang": 108,
+      "nb_matchs": 904
     },
     {
       "slug": "HugoGaston",
       "nom": "Hugo Gaston",
       "pays": "FRA",
-      "rang": 109,
-      "nb_matchs": 531
+      "rang": 111,
+      "nb_matchs": 533
     },
     {
       "slug": "IgnacioBuse",
       "nom": "Ignacio Buse",
       "pays": "PER",
-      "rang": 32,
+      "rang": 33,
       "nb_matchs": 288
     },
     {
@@ -776,8 +776,8 @@
       "slug": "InakiMontesDeLaTorre",
       "nom": "Inaki Montes De La Torre",
       "pays": "ESP",
-      "rang": 194,
-      "nb_matchs": 243
+      "rang": 189,
+      "nb_matchs": 245
     },
     {
       "slug": "IvanLendl",
@@ -797,21 +797,21 @@
       "slug": "JackDraper",
       "nom": "Jack Draper",
       "pays": "GBR",
-      "rang": 154,
+      "rang": 155,
       "nb_matchs": 371
     },
     {
       "slug": "JackKennedy",
       "nom": "Jack Kennedy",
       "pays": "USA",
-      "rang": 385,
-      "nb_matchs": 70
+      "rang": 387,
+      "nb_matchs": 71
     },
     {
       "slug": "JackPinningtonJones",
       "nom": "Jack Pinnington Jones",
       "pays": "GBR",
-      "rang": 188,
+      "rang": 187,
       "nb_matchs": 209
     },
     {
@@ -819,7 +819,7 @@
       "nom": "Jacob Fearnley",
       "pays": "GBR",
       "rang": 87,
-      "nb_matchs": 201
+      "nb_matchs": 203
     },
     {
       "slug": "JaimeFaria",
@@ -832,35 +832,35 @@
       "slug": "JakubMensik",
       "nom": "Jakub Mensik",
       "pays": "CZE",
-      "rang": 16,
+      "rang": 15,
       "nb_matchs": 293
     },
     {
       "slug": "JamesDuckworth",
       "nom": "James Duckworth",
       "pays": "AUS",
-      "rang": 76,
-      "nb_matchs": 927
+      "rang": 77,
+      "nb_matchs": 928
     },
     {
       "slug": "JanChoinski",
       "nom": "Jan Choinski",
       "pays": "GBR",
-      "rang": 110,
+      "rang": 112,
       "nb_matchs": 748
     },
     {
       "slug": "JanKumstat",
       "nom": "Jan Kumstat",
       "pays": "CZE",
-      "rang": 162,
+      "rang": 161,
       "nb_matchs": 108
     },
     {
       "slug": "JanLennardStruff",
       "nom": "Jan Lennard Struff",
       "pays": "GER",
-      "rang": 37,
+      "rang": 39,
       "nb_matchs": 1076
     },
     {
@@ -881,21 +881,21 @@
       "slug": "JensonBrooksby",
       "nom": "Jenson Brooksby",
       "pays": "USA",
-      "rang": 93,
+      "rang": 94,
       "nb_matchs": 294
     },
     {
       "slug": "JeromeKym",
       "nom": "Jerome Kym",
       "pays": "SUI",
-      "rang": 143,
+      "rang": 144,
       "nb_matchs": 289
     },
     {
       "slug": "JesperDeJong",
       "nom": "Jesper De Jong",
       "pays": "NED",
-      "rang": 104,
+      "rang": 105,
       "nb_matchs": 502
     },
     {
@@ -916,7 +916,7 @@
       "slug": "JiriLehecka",
       "nom": "Jiri Lehecka",
       "pays": "CZE",
-      "rang": 15,
+      "rang": 14,
       "nb_matchs": 469
     },
     {
@@ -937,8 +937,8 @@
       "slug": "JoaoLucasReisDaSilva",
       "nom": "Joao Lucas Reis Da Silva",
       "pays": "BRA",
-      "rang": 190,
-      "nb_matchs": 486
+      "rang": 177,
+      "nb_matchs": 489
     },
     {
       "slug": "JoelSchwaerzler",
@@ -965,8 +965,8 @@
       "slug": "JuanCarlosPradoAngelo",
       "nom": "Juan Carlos Prado Angelo",
       "pays": "BOL",
-      "rang": 182,
-      "nb_matchs": 266
+      "rang": 181,
+      "nb_matchs": 268
     },
     {
       "slug": "JuanManuelCerundolo",
@@ -986,22 +986,22 @@
       "slug": "JuanPabloVarillas",
       "nom": "Juan Pablo Varillas",
       "pays": "PER",
-      "rang": 200,
-      "nb_matchs": 772
+      "rang": 197,
+      "nb_matchs": 774
     },
     {
       "slug": "JunchengShang",
       "nom": "Juncheng Shang",
       "pays": "CHN",
-      "rang": 252,
-      "nb_matchs": 241
+      "rang": 235,
+      "nb_matchs": 245
     },
     {
       "slug": "JurijRodionov",
       "nom": "Jurij Rodionov",
       "pays": "AUT",
-      "rang": 118,
-      "nb_matchs": 607
+      "rang": 121,
+      "nb_matchs": 609
     },
     {
       "slug": "KamilMajchrzak",
@@ -1021,42 +1021,42 @@
       "slug": "KeeganSmith",
       "nom": "Keegan Smith",
       "pays": "USA",
-      "rang": 189,
-      "nb_matchs": 377
+      "rang": 188,
+      "nb_matchs": 378
     },
     {
       "slug": "KeiNishikori",
       "nom": "Kei Nishikori",
       "pays": "JPN",
-      "rang": 436,
+      "rang": null,
       "nb_matchs": 878
     },
     {
       "slug": "KyrianJacquet",
       "nom": "Kyrian Jacquet",
       "pays": "FRA",
-      "rang": 85,
-      "nb_matchs": 411
+      "rang": 86,
+      "nb_matchs": 413
     },
     {
       "slug": "LasloDjere",
       "nom": "Laslo Djere",
       "pays": "SRB",
-      "rang": 133,
-      "nb_matchs": 777
+      "rang": 137,
+      "nb_matchs": 779
     },
     {
       "slug": "LautaroMidon",
       "nom": "Lautaro Midon",
       "pays": "ARG",
-      "rang": 180,
-      "nb_matchs": 280
+      "rang": 179,
+      "nb_matchs": 282
     },
     {
       "slug": "LeandroRiedi",
       "nom": "Leandro Riedi",
       "pays": "SUI",
-      "rang": 245,
+      "rang": 246,
       "nb_matchs": 262
     },
     {
@@ -1070,15 +1070,15 @@
       "slug": "LiamBroady",
       "nom": "Liam Broady",
       "pays": "GBR",
-      "rang": 215,
-      "nb_matchs": 944
+      "rang": 259,
+      "nb_matchs": 946
     },
     {
       "slug": "LiamDraxl",
       "nom": "Liam Draxl",
       "pays": "CAN",
       "rang": 165,
-      "nb_matchs": 379
+      "nb_matchs": 382
     },
     {
       "slug": "LleytonHewitt",
@@ -1091,22 +1091,22 @@
       "slug": "LloydHarris",
       "nom": "Lloyd Harris",
       "pays": "RSA",
-      "rang": 103,
+      "rang": 104,
       "nb_matchs": 675
     },
     {
       "slug": "LorenzoMusetti",
       "nom": "Lorenzo Musetti",
       "pays": "ITA",
-      "rang": 25,
-      "nb_matchs": 495
+      "rang": 27,
+      "nb_matchs": 497
     },
     {
       "slug": "LorenzoSonego",
       "nom": "Lorenzo Sonego",
       "pays": "ITA",
-      "rang": 115,
-      "nb_matchs": 708
+      "rang": 110,
+      "nb_matchs": 709
     },
     {
       "slug": "LucaVanAssche",
@@ -1126,28 +1126,28 @@
       "slug": "LukaMikrut",
       "nom": "Luka Mikrut",
       "pays": "CRO",
-      "rang": 255,
-      "nb_matchs": 243
+      "rang": 247,
+      "nb_matchs": 248
     },
     {
       "slug": "LukaPavlovic",
       "nom": "Luka Pavlovic",
       "pays": "FRA",
-      "rang": 198,
+      "rang": 194,
       "nb_matchs": 310
     },
     {
       "slug": "LukasNeumayer",
       "nom": "Lukas Neumayer",
       "pays": "AUT",
-      "rang": 152,
-      "nb_matchs": 405
+      "rang": 153,
+      "nb_matchs": 406
     },
     {
       "slug": "MackenzieMcdonald",
       "nom": "Mackenzie Mcdonald",
       "pays": "USA",
-      "rang": 262,
+      "rang": 265,
       "nb_matchs": 656
     },
     {
@@ -1161,7 +1161,7 @@
       "slug": "MarcoCecchinato",
       "nom": "Marco Cecchinato",
       "pays": "ITA",
-      "rang": 173,
+      "rang": 172,
       "nb_matchs": 992
     },
     {
@@ -1175,35 +1175,35 @@
       "slug": "MarcosGiron",
       "nom": "Marcos Giron",
       "pays": "USA",
-      "rang": 94,
-      "nb_matchs": 727
+      "rang": 95,
+      "nb_matchs": 728
     },
     {
       "slug": "MarianoNavone",
       "nom": "Mariano Navone",
       "pays": "ARG",
-      "rang": 48,
+      "rang": 49,
       "nb_matchs": 415
     },
     {
       "slug": "MarinCilic",
       "nom": "Marin Cilic",
       "pays": "CRO",
-      "rang": 97,
+      "rang": 99,
       "nb_matchs": 1121
     },
     {
       "slug": "MarkLajal",
       "nom": "Mark Lajal",
       "pays": "EST",
-      "rang": 161,
+      "rang": 164,
       "nb_matchs": 356
     },
     {
       "slug": "MartinDamm",
       "nom": "Martin Damm",
       "pays": "USA",
-      "rang": 102,
+      "rang": 103,
       "nb_matchs": 370
     },
     {
@@ -1217,22 +1217,22 @@
       "slug": "MartonFucsovics",
       "nom": "Marton Fucsovics",
       "pays": "HUN",
-      "rang": 145,
+      "rang": 146,
       "nb_matchs": 885
     },
     {
       "slug": "MatejDodig",
       "nom": "Matej Dodig",
       "pays": "CRO",
-      "rang": 136,
-      "nb_matchs": 266
+      "rang": 141,
+      "nb_matchs": 267
     },
     {
       "slug": "MatheusPucinelliDeAlmeida",
       "nom": "Matheus Pucinelli De Almeida",
       "pays": "BRA",
-      "rang": 199,
-      "nb_matchs": 417
+      "rang": 219,
+      "nb_matchs": 419
     },
     {
       "slug": "MatsWilander",
@@ -1245,7 +1245,7 @@
       "slug": "MatteoArnaldi",
       "nom": "Matteo Arnaldi",
       "pays": "ITA",
-      "rang": 38,
+      "rang": 37,
       "nb_matchs": 402
     },
     {
@@ -1260,14 +1260,14 @@
       "nom": "Mattia Bellucci",
       "pays": "ITA",
       "rang": 62,
-      "nb_matchs": 426
+      "nb_matchs": 427
     },
     {
       "slug": "MaxAlcalaGurri",
       "nom": "Max Alcala Gurri",
       "pays": "ESP",
-      "rang": 131,
-      "nb_matchs": 396
+      "rang": 130,
+      "nb_matchs": 400
     },
     {
       "slug": "MichaelChang",
@@ -1281,21 +1281,21 @@
       "nom": "Michael Mmoh",
       "pays": "USA",
       "rang": 150,
-      "nb_matchs": 580
+      "nb_matchs": 582
     },
     {
       "slug": "MichaelZheng",
       "nom": "Michael Zheng",
       "pays": "USA",
-      "rang": 100,
-      "nb_matchs": 142
+      "rang": 98,
+      "nb_matchs": 145
     },
     {
       "slug": "MikaBrunold",
       "nom": "Mika Brunold",
       "pays": "SUI",
-      "rang": 179,
-      "nb_matchs": 248
+      "rang": 178,
+      "nb_matchs": 249
     },
     {
       "slug": "MilosRaonic",
@@ -1309,49 +1309,49 @@
       "nom": "Miomir Kecmanovic",
       "pays": "SRB",
       "rang": 64,
-      "nb_matchs": 612
+      "nb_matchs": 613
     },
     {
       "slug": "MoiseKouame",
       "nom": "Moise Kouame",
       "pays": "FRA",
-      "rang": 132,
-      "nb_matchs": 90
+      "rang": 134,
+      "nb_matchs": 91
     },
     {
       "slug": "NicolaiBudkovKjaer",
       "nom": "Nicolai Budkov Kjaer",
       "pays": "NOR",
-      "rang": 178,
-      "nb_matchs": 187
+      "rang": 176,
+      "nb_matchs": 189
     },
     {
       "slug": "NicolasMejia",
       "nom": "Nicolas Mejia",
       "pays": "COL",
       "rang": 114,
-      "nb_matchs": 511
+      "nb_matchs": 513
     },
     {
       "slug": "NikolasSanchezIzquierdo",
       "nom": "Nikolas Sanchez Izquierdo",
       "pays": "ESP",
-      "rang": 151,
-      "nb_matchs": 580
+      "rang": 132,
+      "nb_matchs": 584
     },
     {
       "slug": "NikolozBasilashvili",
       "nom": "Nikoloz Basilashvili",
       "pays": "GEO",
-      "rang": 86,
-      "nb_matchs": 974
+      "rang": 85,
+      "nb_matchs": 976
     },
     {
       "slug": "NisheshBasavareddy",
       "nom": "Nishesh Basavareddy",
       "pays": "USA",
-      "rang": 126,
-      "nb_matchs": 198
+      "rang": 117,
+      "nb_matchs": 203
     },
     {
       "slug": "NovakDjokovic",
@@ -1371,28 +1371,28 @@
       "slug": "OttoVirtanen",
       "nom": "Otto Virtanen",
       "pays": "FIN",
-      "rang": 127,
-      "nb_matchs": 442
+      "rang": 107,
+      "nb_matchs": 447
     },
     {
       "slug": "PabloCarrenoBusta",
       "nom": "Pablo Carreno Busta",
       "pays": "ESP",
-      "rang": 77,
+      "rang": 76,
       "nb_matchs": 998
     },
     {
       "slug": "PabloLlamasRuiz",
       "nom": "Pablo Llamas Ruiz",
       "pays": "ESP",
-      "rang": 142,
+      "rang": 143,
       "nb_matchs": 333
     },
     {
       "slug": "PatrickKypson",
       "nom": "Patrick Kypson",
       "pays": "USA",
-      "rang": 240,
+      "rang": 243,
       "nb_matchs": 369
     },
     {
@@ -1406,8 +1406,8 @@
       "slug": "PedroMartinez",
       "nom": "Pedro Martinez",
       "pays": "ESP",
-      "rang": 124,
-      "nb_matchs": 806
+      "rang": 120,
+      "nb_matchs": 809
     },
     {
       "slug": "PeteSampras",
@@ -1427,8 +1427,8 @@
       "slug": "RafaelJodar",
       "nom": "Rafael Jodar",
       "pays": "ESP",
-      "rang": 11,
-      "nb_matchs": 146
+      "rang": 10,
+      "nb_matchs": 148
     },
     {
       "slug": "RafaelNadal",
@@ -1448,21 +1448,21 @@
       "slug": "ReiSakamoto",
       "nom": "Rei Sakamoto",
       "pays": "JPN",
-      "rang": 122,
-      "nb_matchs": 194
+      "rang": 125,
+      "nb_matchs": 197
     },
     {
       "slug": "ReillyOpelka",
       "nom": "Reilly Opelka",
       "pays": "USA",
-      "rang": 275,
+      "rang": 276,
       "nb_matchs": 428
     },
     {
       "slug": "RemyBertola",
       "nom": "Remy Bertola",
       "pays": "SUI",
-      "rang": 221,
+      "rang": 225,
       "nb_matchs": 474
     },
     {
@@ -1490,7 +1490,7 @@
       "slug": "RomanAndresBurruchaga",
       "nom": "Roman Andres Burruchaga",
       "pays": "ARG",
-      "rang": 79,
+      "rang": 80,
       "nb_matchs": 415
     },
     {
@@ -1504,63 +1504,63 @@
       "slug": "SaschaGueymardWayenburg",
       "nom": "Sascha Gueymard Wayenburg",
       "pays": "FRA",
-      "rang": 202,
-      "nb_matchs": 350
+      "rang": 191,
+      "nb_matchs": 353
     },
     {
       "slug": "SebastianBaez",
       "nom": "Sebastian Baez",
       "pays": "ARG",
-      "rang": 52,
-      "nb_matchs": 502
+      "rang": 53,
+      "nb_matchs": 503
     },
     {
       "slug": "SebastianGorzny",
       "nom": "Sebastian Gorzny",
       "pays": "USA",
-      "rang": 403,
-      "nb_matchs": 58
+      "rang": 361,
+      "nb_matchs": 61
     },
     {
       "slug": "SebastianKorda",
       "nom": "Sebastian Korda",
       "pays": "USA",
-      "rang": 101,
+      "rang": 102,
       "nb_matchs": 437
     },
     {
       "slug": "SebastianOfner",
       "nom": "Sebastian Ofner",
       "pays": "AUT",
-      "rang": 120,
+      "rang": 124,
       "nb_matchs": 706
     },
     {
       "slug": "ShintaroMochizuki",
       "nom": "Shintaro Mochizuki",
       "pays": "JPN",
-      "rang": 128,
-      "nb_matchs": 455
+      "rang": 131,
+      "nb_matchs": 456
     },
     {
       "slug": "ShoShimabukuro",
       "nom": "Sho Shimabukuro",
       "pays": "JPN",
-      "rang": 123,
+      "rang": 128,
       "nb_matchs": 463
     },
     {
       "slug": "SoonWooKwon",
       "nom": "Soon Woo Kwon",
       "pays": "KOR",
-      "rang": 155,
-      "nb_matchs": 506
+      "rang": 156,
+      "nb_matchs": 507
     },
     {
       "slug": "StanWawrinka",
       "nom": "Stan Wawrinka",
       "pays": "SUI",
-      "rang": 164,
+      "rang": 163,
       "nb_matchs": 1189
     },
     {
@@ -1574,14 +1574,14 @@
       "slug": "StefanoTravaglia",
       "nom": "Stefano Travaglia",
       "pays": "ITA",
-      "rang": 177,
-      "nb_matchs": 1002
+      "rang": 175,
+      "nb_matchs": 1003
     },
     {
       "slug": "StefanosSakellaridis",
       "nom": "Stefanos Sakellaridis",
       "pays": "GRE",
-      "rang": 130,
+      "rang": 133,
       "nb_matchs": 388
     },
     {
@@ -1595,22 +1595,22 @@
       "slug": "TallonGriekspoor",
       "nom": "Tallon Griekspoor",
       "pays": "NED",
-      "rang": 49,
+      "rang": 50,
       "nb_matchs": 696
     },
     {
       "slug": "TaroDaniel",
       "nom": "Taro Daniel",
       "pays": "JPN",
-      "rang": 172,
-      "nb_matchs": 1066
+      "rang": 168,
+      "nb_matchs": 1069
     },
     {
       "slug": "TaylorFritz",
       "nom": "Taylor Fritz",
       "pays": "USA",
-      "rang": 10,
-      "nb_matchs": 775
+      "rang": 9,
+      "nb_matchs": 779
     },
     {
       "slug": "TerenceAtmane",
@@ -1623,28 +1623,28 @@
       "slug": "ThanasiKokkinakis",
       "nom": "Thanasi Kokkinakis",
       "pays": "AUS",
-      "rang": 413,
+      "rang": 410,
       "nb_matchs": 485
     },
     {
       "slug": "ThiagoAgustinTirante",
       "nom": "Thiago Agustin Tirante",
       "pays": "ARG",
-      "rang": 51,
-      "nb_matchs": 491
+      "rang": 47,
+      "nb_matchs": 494
     },
     {
       "slug": "ThiagoSeybothWild",
       "nom": "Thiago Seyboth Wild",
       "pays": "BRA",
-      "rang": 98,
-      "nb_matchs": 512
+      "rang": 101,
+      "nb_matchs": 513
     },
     {
       "slug": "TimofeySkatov",
       "nom": "Timofey Skatov",
       "pays": "KAZ",
-      "rang": 197,
+      "rang": 193,
       "nb_matchs": 474
     },
     {
@@ -1658,22 +1658,22 @@
       "slug": "TobySamuel",
       "nom": "Toby Samuel",
       "pays": "GBR",
-      "rang": 95,
-      "nb_matchs": 194
+      "rang": 92,
+      "nb_matchs": 196
     },
     {
       "slug": "TomGentzsch",
       "nom": "Tom Gentzsch",
       "pays": "GER",
-      "rang": 159,
-      "nb_matchs": 343
+      "rang": 152,
+      "nb_matchs": 345
     },
     {
       "slug": "TomasBarriosVera",
       "nom": "Tomas Barrios Vera",
       "pays": "CHI",
-      "rang": 191,
-      "nb_matchs": 694
+      "rang": 203,
+      "nb_matchs": 695
     },
     {
       "slug": "TomasBerdych",
@@ -1707,49 +1707,49 @@
       "slug": "TristanBoyer",
       "nom": "Tristan Boyer",
       "pays": "USA",
-      "rang": 208,
-      "nb_matchs": 270
+      "rang": 200,
+      "nb_matchs": 273
     },
     {
       "slug": "TristanSchoolkate",
       "nom": "Tristan Schoolkate",
       "pays": "AUS",
-      "rang": 144,
-      "nb_matchs": 425
+      "rang": 145,
+      "nb_matchs": 426
     },
     {
       "slug": "UgoBlanchet",
       "nom": "Ugo Blanchet",
       "pays": "FRA",
-      "rang": 334,
-      "nb_matchs": 397
+      "rang": 325,
+      "nb_matchs": 399
     },
     {
       "slug": "UgoHumbert",
       "nom": "Ugo Humbert",
       "pays": "FRA",
-      "rang": 39,
-      "nb_matchs": 632
+      "rang": 38,
+      "nb_matchs": 634
     },
     {
       "slug": "ValentinRoyer",
       "nom": "Valentin Royer",
       "pays": "FRA",
-      "rang": 119,
+      "rang": 123,
       "nb_matchs": 452
     },
     {
       "slug": "ValentinVacherot",
       "nom": "Valentin Vacherot",
       "pays": "MON",
-      "rang": 27,
+      "rang": 26,
       "nb_matchs": 424
     },
     {
       "slug": "ViliusGaubas",
       "nom": "Vilius Gaubas",
       "pays": "LTU",
-      "rang": 146,
+      "rang": 148,
       "nb_matchs": 325
     },
     {
@@ -1763,8 +1763,8 @@
       "slug": "VitaliySachko",
       "nom": "Vitaliy Sachko",
       "pays": "UKR",
-      "rang": 247,
-      "nb_matchs": 555
+      "rang": 248,
+      "nb_matchs": 556
     },
     {
       "slug": "YannickHanfmann",
@@ -1784,7 +1784,7 @@
       "slug": "YibingWu",
       "nom": "Yibing Wu",
       "pays": "CHN",
-      "rang": 105,
+      "rang": 106,
       "nb_matchs": 266
     },
     {
@@ -1798,15 +1798,15 @@
       "slug": "ZdenekKolar",
       "nom": "Zdenek Kolar",
       "pays": "CZE",
-      "rang": 204,
-      "nb_matchs": 829
+      "rang": 213,
+      "nb_matchs": 830
     },
     {
       "slug": "ZhizhenZhang",
       "nom": "Zhizhen Zhang",
       "pays": "CHN",
-      "rang": 156,
-      "nb_matchs": 539
+      "rang": 157,
+      "nb_matchs": 540
     },
     {
       "slug": "ZizouBergs",
@@ -1819,8 +1819,8 @@
       "slug": "ZsomborPiros",
       "nom": "Zsombor Piros",
       "pays": "HUN",
-      "rang": 99,
-      "nb_matchs": 552
+      "rang": 96,
+      "nb_matchs": 555
     }
   ]
 }
